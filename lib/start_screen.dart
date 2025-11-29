@@ -28,7 +28,7 @@ class StartScreen extends StatelessWidget {
                   fit: BoxFit.fitWidth,
                   width: 300,
                 ),
-                const SizedBox(height: 40),
+                const SizedBox(height: 80),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
