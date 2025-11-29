@@ -31,7 +31,7 @@ flutter:
   assets:
     - .env
     - assets/
-    - assets/music/Count_Down.mp3
+    - assets/music/
 
 flutter_native_splash:
   background_image: assets/splash.png
