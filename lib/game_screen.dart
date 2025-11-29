@@ -164,23 +164,27 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                         width: double.infinity,
                         color: Colors.black54,
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              'あなたの',
-                              style: TextStyle(
-                                  fontSize: 32,
-                                  color: Colors.white,
-                                  fontFamily: 'Melonano'
-                              ),
-                            ),
-                            Text(
-                              'かち！',
-                              style: TextStyle(
-                                  fontSize: 80,
-                                  color: Colors.white,
-                                  fontFamily: 'Melonano'
-                              ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'あなたの',
+                                  style: TextStyle(
+                                      fontSize: 32,
+                                      color: Colors.white,
+                                      fontFamily: 'Melonano'
+                                  ),
+                                ),
+                                Text(
+                                  'かち！',
+                                  style: TextStyle(
+                                      fontSize: 80,
+                                      color: Colors.white,
+                                      fontFamily: 'Melonano'
+                                  ),
+                                ),
+                              ],
                             ),
                             GestureDetector(
                               onTap: () {
