@@ -164,7 +164,12 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                       return ResultOverlay(
                         type: ResultType.lose,
                         onPressedBackButton: () {
-
+                          game.overlays.remove('gameOver');
+                          game.resetGame();
+                          Navigator.popUntil(
+                            context,
+                                (route) => route.isFirst,
+                          );
                         },
                       );
                       return Center(
