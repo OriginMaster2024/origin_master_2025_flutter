@@ -86,13 +86,14 @@ class Turret extends PositionComponent {
 
   void shoot() {
     // タレット中心位置
-    final bulletX = position.x + size.x / 2 - 2.5; // 弾の幅5の半分
+    final bulletType = BulletType.playerLevel1;
+    final bulletX = position.x + size.x / 2 - bulletType.size.x / 2; // 弾の幅の半分
     final bulletY = isEnemy
         ? position.y + size.y // 敵は下から発射
         : position.y;    // プレイヤーは上から発射（弾の高さ20）
 
     final bulletPosition = Vector2(bulletX, bulletY);
-    final bullet = Bullet(bulletPosition, isEnemy: isEnemy);
+    final bullet = Bullet(bulletPosition, isEnemy: isEnemy, type: bulletType);
     parent?.add(bullet);
   }
 
