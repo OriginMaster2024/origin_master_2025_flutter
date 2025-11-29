@@ -180,7 +180,7 @@ class Turret extends PositionComponent
       if (hpBarWidth > 2) {
         canvas.drawRect(
           Rect.fromLTWH(0, barY, hpBarWidth.floorToDouble(), 1.0),
-          pixelPerfectPaint..color = Colors.white.withOpacity(0.5),
+          pixelPerfectPaint..color = Colors.white.withValues(alpha: 0.5),
         );
       }
     }
