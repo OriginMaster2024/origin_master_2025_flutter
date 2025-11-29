@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: const GameScreen(),
+      home: const StartScreen(),
     );
   }
 }
@@ -77,7 +77,53 @@ class _GameScreenState extends State<GameScreen> {
       body: Stack(
         children: [
           // ゲーム画面
-          GameWidget(game: game),
+          GameWidget<ShootingGame>(
+            game: game,
+            overlayBuilderMap: {
+              'gameOver': (context, game) {
+                return Center(
+                  child: Container(
+                    color: Colors.black54,
+                    child: AlertDialog(
+                      title: Text('ゲームオーバー'),
+                      content: Text('敵の勝ちです！'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            game.overlays.remove('gameOver');
+                            game.resumeEngine();
+                            game.resetGame();
+                          },
+                          child: Text('リスタート'),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+              'gameClear': (context, game) {
+                return Center(
+                  child: Container(
+                    color: Colors.black54,
+                    child: AlertDialog(
+                      title: Text('ゲームクリア'),
+                      content: Text('あなたの勝ちです！'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            game.overlays.remove('gameClear');
+                            game.resumeEngine();
+                            game.resetGame();
+                          },
+                          child: Text('リスタート'),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            },
+          ),
           // 下部: BPM/安定性テキスト/グラフ
           Positioned(
             bottom: 0,
@@ -103,6 +149,49 @@ class _GameScreenState extends State<GameScreen> {
                   },
                 ),
               ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class StartScreen extends StatelessWidget {
+  const StartScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
+        children: [
+          // 背景
+          Container(color: Colors.black87),
+          // 中央にタイトルとボタン
+          Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  'Shooting Game',
+                  style: TextStyle(
+                    fontSize: 36,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: 40),
+                ElevatedButton(
+                  onPressed: () {
+                    // GameWidget に遷移
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => GameScreen()),
+                    );
+                  },
+                  child: const Text('Start Game'),
+                ),
+              ],
             ),
           ),
         ],
