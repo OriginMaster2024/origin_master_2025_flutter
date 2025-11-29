@@ -49,6 +49,8 @@ class LobbyScreen extends HookWidget {
         callback: (payload) {
           final participantIDs = List<String>.from(payload['participants']);
           if (participantIDs.contains(myUserID)) {
+            channel.untrack();
+
             final gameID = payload['game_id'] as String;
             Navigator.push(
               context,

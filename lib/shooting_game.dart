@@ -17,16 +17,25 @@ class ShootingGame extends FlameGame with HasCollisionDetection {
   final double sensitivity = 20;
 
   final BpmState bpmState;
+  final void Function({
+    required int level,
+    required int hp,
+    required double percentX,
+    required double percentY,
+  })
+  onTurretStateChange;
 
   int turretLevel = 1; // 1:level1, 2:level2, 3:level3
   double stableCounter = 0.0; // isStable=true が続いた秒数
   double unstableCounter = 0.0; // isStable=false が続いた秒数
 
-  ShootingGame({required this.bpmState});
+  bool isGameOver = false;
+
+  ShootingGame({required this.bpmState, required this.onTurretStateChange});
 
   @override
   Future<void> onLoad() async {
-    initTurrets();
+    _initTurrets();
     add(playerTurret);
     add(enemyTurret);
 
@@ -85,17 +94,22 @@ class ShootingGame extends FlameGame with HasCollisionDetection {
       }
     }
 
+    // 自分のタレットの状態を相手に送信
+    final mirroredPercentPosition = playerTurret.getMirroredPercentPosition();
+    onTurretStateChange(
+      level: turretLevel,
+      hp: playerTurret.hp,
+      percentX: mirroredPercentPosition.x,
+      percentY: mirroredPercentPosition.y,
+    );
+
     // ゲーム終了判定
-    if (playerTurret.hp <= 0) {
-      pauseEngine();
-      overlays.add('gameOver');
-    } else if (enemyTurret.hp <= 0) {
-      pauseEngine();
-      overlays.add('gameClear');
+    if (playerTurret.hp <= 0 && !isGameOver) {
+      endGame(isPlayerWin: false);
     }
   }
 
-  void initTurrets() {
+  void _initTurrets() {
     playerTurret.specs = TurretSpecs.getByLevel(1);
     playerTurret.position = Vector2(
       size.x / 2 - playerTurret.specs.size.x / 2,
@@ -110,10 +124,32 @@ class ShootingGame extends FlameGame with HasCollisionDetection {
     enemyTurret.hp = 100;
   }
 
+  void updateOpponentTurret({
+    required int level,
+    required int hp,
+    required double percentX,
+    required double percentY,
+  }) {
+    enemyTurret.specs = TurretSpecs.getByLevel(level);
+    enemyTurret.size = enemyTurret.specs.size.clone();
+    enemyTurret.hp = hp;
+    enemyTurret.position = Vector2(size.x * percentX, size.y * percentY);
+  }
+
+  void endGame({required bool isPlayerWin}) {
+    isGameOver = true;
+    pauseEngine();
+    if (isPlayerWin) {
+      overlays.add('gameClear');
+    } else {
+      overlays.add('gameOver');
+    }
+  }
+
   void resetGame() {
     // 弾なども全部消す
     children.whereType<Bullet>().forEach((b) => b.removeFromParent());
 
-    initTurrets();
+    _initTurrets();
   }
 }

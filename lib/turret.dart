@@ -4,10 +4,12 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:origin_master_2025_flutter/shooting_game.dart';
 
 import 'bullet.dart';
 
-class Turret extends PositionComponent with CollisionCallbacks {
+class Turret extends PositionComponent
+    with HasGameReference<ShootingGame>, CollisionCallbacks {
   TurretSpecs specs;
   final bool isEnemy;
   double timeSinceLastShot = 0.0;
@@ -58,9 +60,15 @@ class Turret extends PositionComponent with CollisionCallbacks {
     super.onCollision(intersectionPoints, other);
 
     // 弾の当たり判定
-    if (other is Bullet && isEnemy != other.isEnemy) {
-      takeDamage(other.damage);
-      other.removeFromParent();
+    if (other is Bullet) {
+      if (!isEnemy && other.isEnemy) {
+        // 自分の場合はダメージ計算をする
+        takeDamage(other.damage);
+        other.removeFromParent();
+      } else if (isEnemy && !other.isEnemy) {
+        // 敵の場合は弾を消すだけ
+        other.removeFromParent();
+      }
     }
   }
 
@@ -118,6 +126,16 @@ class Turret extends PositionComponent with CollisionCallbacks {
       // プレイヤーの場合のみ振動
       HapticFeedback.lightImpact();
     }
+  }
+
+  /// 相手目線での自分の位置を返してくれる関数
+  /// 相手にbroadcastで位置情報を送る際にこの値を渡す
+  Vector2 getMirroredPercentPosition() {
+    final mirroredPosition = game.size - position;
+    return Vector2(
+      mirroredPosition.x / game.size.x,
+      mirroredPosition.y / game.size.y,
+    );
   }
 }
 
