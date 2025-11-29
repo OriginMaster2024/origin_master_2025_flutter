@@ -99,18 +99,20 @@ class _StartScreenState extends State<StartScreen> {
                     const SizedBox(width: 16),
                     GestureDetector(
                       onTap: () {
-                        _bgmPlayer.stop();
-
                         // ロビーに遷移
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                LobbyScreen(myUserID: Uuid().v4()),
+                          MaterialPageRoute<bool?>(
+                            builder: (context) => LobbyScreen(
+                              myUserID: Uuid().v4(),
+                              bgmPlayer: _bgmPlayer,
+                            ),
                           ),
-                        ).then((_) {
-                          // ゲーム画面から戻ってきたタイミングで BGM を再生
-                          _playBgm();
+                        ).then((skipPlayingBgm) {
+                          if (skipPlayingBgm == null || !skipPlayingBgm) {
+                            // ゲーム画面から戻ってきたタイミングで BGM を再生
+                            _playBgm();
+                          }
                         });
                       },
                       child: Image.asset(

@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -8,9 +9,14 @@ import 'game_screen.dart';
 const _broadcastEventGameStart = 'game_start';
 
 class LobbyScreen extends HookWidget {
-  const LobbyScreen({super.key, required this.myUserID});
+  const LobbyScreen({
+    super.key,
+    required this.myUserID,
+    required this.bgmPlayer,
+  });
 
   final String myUserID;
+  final AudioPlayer bgmPlayer;
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +107,7 @@ class LobbyScreen extends HookWidget {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        Navigator.pop(context);
+                        Navigator.pop(context, true);
                       },
                       child: Image.asset(
                         'assets/button_back.png',
@@ -118,6 +124,8 @@ class LobbyScreen extends HookWidget {
                                 orElse: () => '',
                               );
                               if (opponentID.isEmpty) return;
+
+                              bgmPlayer.stop();
 
                               channel.sendBroadcastMessage(
                                 event: _broadcastEventGameStart,
