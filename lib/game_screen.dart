@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
+import 'package:origin_master_2025_flutter/result_overlay.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'bpm_overlay.dart';
@@ -160,46 +161,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                     'countdown': (context, game) =>
                         CountdownOverlay(game: game),
                     'gameOver': (context, game) {
-                      return Container(
-                        width: double.infinity,
-                        color: Colors.black54,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'あなたの',
-                                  style: TextStyle(
-                                      fontSize: 32,
-                                      color: Colors.white,
-                                      fontFamily: 'Melonano'
-                                  ),
-                                ),
-                                Text(
-                                  'かち！',
-                                  style: TextStyle(
-                                      fontSize: 80,
-                                      color: Colors.white,
-                                      fontFamily: 'Melonano'
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 48),
-                            GestureDetector(
-                              onTap: () {
-                              },
-                              child: Image.asset(
-                                'assets/button_back.png',
-                                fit: BoxFit.fitWidth,
-                                width: 142,
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
+                      return ResultOverlay(type: ResultType.lose);
                       return Center(
                         child: Container(
                           color: Colors.black54,
