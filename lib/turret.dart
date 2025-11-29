@@ -3,11 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'bullet.dart';
+import 'dart:ui' as ui;
+import 'package:flutter/services.dart';
 
 class Turret extends PositionComponent {
   TurretSpecs specs;
   final bool isEnemy;
   double timeSinceLastShot = 0.0;
+  ui.Image? image;
 
   int hp = 500;
 
@@ -22,6 +25,20 @@ class Turret extends PositionComponent {
   set updateSpecs(TurretSpecs newSpecs) {
     specs = newSpecs;
     size = specs.size.clone();
+  }
+
+  @override
+  Future<void> onLoad() async {
+    final imagePath = isEnemy ? 'assets/airplane.png' : 'assets/ship.png';
+    image = await loadUiImage(imagePath);
+    return super.onLoad();
+  }
+
+  Future<ui.Image> loadUiImage(String assetPath) async {
+    final ByteData data = await rootBundle.load(assetPath);
+    final ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List());
+    final ui.FrameInfo frameInfo = await codec.getNextFrame();
+    return frameInfo.image;
   }
 
   @override
@@ -40,7 +57,14 @@ class Turret extends PositionComponent {
     super.render(canvas);
 
     // タレット本体
-    canvas.drawRect(size.toRect(), Paint()..color = Colors.blue);
+    if (image != null) {
+      canvas.drawImageRect(
+          image!,
+          Rect.fromLTWH(0, 0, image!.width.toDouble(), image!.height.toDouble()),
+          Rect.fromLTWH(0, 0, size.x, size.x * 4 / 5),
+          Paint()
+      );
+    }
 
     // HPバー
     final barWidth = size.x;
@@ -92,13 +116,13 @@ class TurretSpecs {
   static TurretSpecs getByLevel(int level) {
     switch (level) {
       case 1:
-        return TurretSpecs(shotInterval: 0.8, size: Vector2(40, 20));
+        return TurretSpecs(shotInterval: 0.8, size: Vector2(40, 40 * 4 / 5));
       case 2:
-        return TurretSpecs(shotInterval: 0.5, size: Vector2(60, 30));
+        return TurretSpecs(shotInterval: 0.5, size: Vector2(60, 60 * 4 / 5));
       case 3:
-        return TurretSpecs(shotInterval: 0.2, size: Vector2(80, 40));
+        return TurretSpecs(shotInterval: 0.2, size: Vector2(80, 80 * 4 / 5));
       default:
-        return TurretSpecs(shotInterval: 0.8, size: Vector2(40, 20));
+        return TurretSpecs(shotInterval: 0.8, size: Vector2(40, 40 * 4 / 5));
     }
   }
 }

@@ -40,6 +40,9 @@ class _GameScreenState extends State<GameScreen> {
           // ゲーム画面
           GameWidget<ShootingGame>(
             game: game,
+            backgroundBuilder: (context) {
+              return Image.asset('assets/game_background.png');
+            },
             overlayBuilderMap: {
               'gameOver': (context, game) {
                 return Center(
