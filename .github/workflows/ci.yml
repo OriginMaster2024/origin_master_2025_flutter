@@ -32,6 +32,9 @@ jobs:
           flutter-version: ${{ steps.flutter_info.outputs.version }}
           cache: true
 
+      - name: Setup dummy .env file
+        run: cp .env.example .env
+
       - name: Install dependencies
         run: flutter pub get
 
