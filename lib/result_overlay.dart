@@ -37,8 +37,7 @@ class ResultOverlay extends StatelessWidget {
           ),
           const SizedBox(height: 48),
           GestureDetector(
-            onTap: () {
-            },
+            onTap: onPressedBackButton,
             child: Image.asset(
               'assets/button_back.png',
               fit: BoxFit.fitWidth,
