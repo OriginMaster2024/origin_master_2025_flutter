@@ -64,4 +64,21 @@ enum BulletType {
   enemyLevel1,
   enemyLevel2,
   enemyLevel3;
+
+  String get imagePath {
+    switch (this) {
+      case BulletType.playerLevel1:
+        return 'assets/grape.png';
+      case BulletType.playerLevel2:
+        return 'assets/grape.png';
+      case BulletType.playerLevel3:
+        return 'assets/grape.png';
+      case BulletType.enemyLevel1:
+        return 'assets/grape.png';
+      case BulletType.enemyLevel2:
+        return 'assets/grape.png';
+      case BulletType.enemyLevel3:
+        return 'assets/grape.png';
+    }
+  }
 }
