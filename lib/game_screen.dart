@@ -7,7 +7,9 @@ import 'heart_bpm.dart';
 import 'shooting_game.dart';
 
 class GameScreen extends StatefulWidget {
-  const GameScreen({super.key});
+  const GameScreen({super.key, required this.gameID});
+
+  final String gameID;
 
   @override
   State<GameScreen> createState() => _GameScreenState();

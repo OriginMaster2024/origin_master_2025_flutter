@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:origin_master_2025_flutter/game_screen.dart';
+import 'package:uuid/uuid.dart';
+
+import 'lobby_screen.dart';
 
 class StartScreen extends StatelessWidget {
   const StartScreen({super.key});
@@ -30,10 +33,24 @@ class StartScreen extends StatelessWidget {
                     // GameWidget に遷移
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => GameScreen()),
+                      MaterialPageRoute(
+                        builder: (context) => GameScreen(gameID: 'cpu'),
+                      ),
                     );
                   },
                   child: const Text('Start Game'),
+                ),
+                const SizedBox(height: 24),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LobbyScreen(userID: Uuid().v4()),
+                      ),
+                    );
+                  },
+                  child: const Text('Enter Lobby'),
                 ),
               ],
             ),
