@@ -164,6 +164,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                         width: double.infinity,
                         color: Colors.black54,
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               'あなたの',
