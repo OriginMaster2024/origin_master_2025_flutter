@@ -1,12 +1,13 @@
+import 'dart:ui' as ui;
+
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'bullet.dart';
-import 'dart:ui' as ui;
-import 'package:flutter/services.dart';
 
-class Turret extends PositionComponent {
+class Turret extends PositionComponent with CollisionCallbacks {
   TurretSpecs specs;
   final bool isEnemy;
   double timeSinceLastShot = 0.0;
@@ -14,11 +15,16 @@ class Turret extends PositionComponent {
 
   int hp = 500;
 
-  Turret({
-    required this.specs,
-    this.isEnemy = false,
-  }) {
+  Turret({required this.specs, this.isEnemy = false}) {
     size = specs.size;
+  }
+
+  @override
+  Future<void> onLoad() async {
+    await super.onLoad();
+    add(RectangleHitbox());
+    final imagePath = isEnemy ? 'assets/airplane.png' : 'assets/ship.png';
+    image = await loadUiImage(imagePath);
   }
 
   // specs の setter を作って size も更新
@@ -27,16 +33,11 @@ class Turret extends PositionComponent {
     size = specs.size.clone();
   }
 
-  @override
-  Future<void> onLoad() async {
-    final imagePath = isEnemy ? 'assets/airplane.png' : 'assets/ship.png';
-    image = await loadUiImage(imagePath);
-    return super.onLoad();
-  }
-
   Future<ui.Image> loadUiImage(String assetPath) async {
     final ByteData data = await rootBundle.load(assetPath);
-    final ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List());
+    final ui.Codec codec = await ui.instantiateImageCodec(
+      data.buffer.asUint8List(),
+    );
     final ui.FrameInfo frameInfo = await codec.getNextFrame();
     return frameInfo.image;
   }
@@ -53,16 +54,27 @@ class Turret extends PositionComponent {
   }
 
   @override
+  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
+    super.onCollision(intersectionPoints, other);
+
+    // 弾の当たり判定
+    if (other is Bullet && isEnemy != other.isEnemy) {
+      takeDamage(other.damage);
+      other.removeFromParent();
+    }
+  }
+
+  @override
   void render(Canvas canvas) {
     super.render(canvas);
 
     // タレット本体
     if (image != null) {
       canvas.drawImageRect(
-          image!,
-          Rect.fromLTWH(0, 0, image!.width.toDouble(), image!.height.toDouble()),
-          Rect.fromLTWH(0, 0, size.x, size.x * 4 / 5),
-          Paint()
+        image!,
+        Rect.fromLTWH(0, 0, image!.width.toDouble(), image!.height.toDouble()),
+        Rect.fromLTWH(0, 0, size.x, size.x * 4 / 5),
+        Paint(),
       );
     }
 
@@ -88,8 +100,10 @@ class Turret extends PositionComponent {
     // タレット中心位置
     final bulletX = position.x + size.x / 2 - 2.5; // 弾の幅5の半分
     final bulletY = isEnemy
-        ? position.y + size.y // 敵は下から発射
-        : position.y;    // プレイヤーは上から発射（弾の高さ20）
+        ? position.y +
+              size
+                  .y // 敵は下から発射
+        : position.y; // プレイヤーは上から発射（弾の高さ20）
 
     final bulletPosition = Vector2(bulletX, bulletY);
     final bullet = Bullet(bulletPosition, isEnemy: isEnemy);
