@@ -60,7 +60,12 @@ class _GameScreenState extends State<GameScreen> {
       body: Stack(
         children: [
           // ゲーム画面
-          GameWidget(game: game),
+          GameWidget(
+            game: game,
+            backgroundBuilder: (context) {
+              return Image.asset('assets/game_background.png');
+            }
+          ),
           // 下部: BPM/安定性テキスト/グラフ
           Positioned(
             bottom: 0,
