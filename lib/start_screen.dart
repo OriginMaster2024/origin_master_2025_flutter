@@ -30,6 +30,7 @@ class StartScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 40),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     GestureDetector(
                       onTap: () {
