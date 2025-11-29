@@ -24,6 +24,11 @@ class StartScreen extends StatelessWidget {
             fit: BoxFit.fitWidth,
             width: 256,
           ),
+          Image.asset(
+            'assets/start_cloud_right.png',
+            fit: BoxFit.fitWidth,
+            width: 195,
+          ),
           Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
