@@ -29,6 +29,7 @@ class ShootingGame extends FlameGame
     required double percentY,
   })
   onTurretStateChange;
+  final void Function() onEnemyHit;
 
   int turretLevel = 1; // 1:level1, 2:level2, 3:level3
   double stableCounter = 0.0; // isStable=true が続いた秒数
@@ -37,7 +38,11 @@ class ShootingGame extends FlameGame
 
   bool isGameOver = false;
 
-  ShootingGame({required this.bpmState, required this.onTurretStateChange});
+  ShootingGame({
+    required this.bpmState,
+    required this.onTurretStateChange,
+    required this.onEnemyHit,
+  });
 
   @override
   Future<void> onLoad() async {
