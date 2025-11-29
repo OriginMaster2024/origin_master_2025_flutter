@@ -81,4 +81,24 @@ enum BulletType {
         return 'assets/grape.png';
     }
   }
+
+  static BulletType make(int level, bool isEnemy) {
+    if (isEnemy) {
+      if (level == 3) {
+        return BulletType.enemyLevel3;
+      } else if (level == 2) {
+        return BulletType.enemyLevel2;
+      } else {
+        return BulletType.enemyLevel1;
+      }
+    } else {
+      if (level == 3) {
+        return BulletType.playerLevel3;
+      } else if (level == 2) {
+        return BulletType.playerLevel2;
+      } else {
+        return BulletType.playerLevel1;
+      }
+    }
+  }
 }
