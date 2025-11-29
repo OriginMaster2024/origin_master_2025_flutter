@@ -17,6 +17,7 @@ dependencies:
   supabase_flutter: ^2.10.3
   flutter_dotenv: ^6.0.0
   uuid: ^4.5.2
+  flutter_native_splash: ^2.4.7
 
 dev_dependencies:
   flutter_test:
@@ -31,3 +32,6 @@ flutter:
     - .env
     - assets/
     - assets/music/
+
+flutter_native_splash:
+  background_image: assets/splash.png

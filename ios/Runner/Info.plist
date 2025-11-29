@@ -49,5 +49,7 @@
 	<string>This App uses the camera to measure your heart rate.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>This App uses the microphone to measure your heart rate.</string>
+	<key>UIStatusBarHidden</key>
+	<false/>
 </dict>
 </plist>
