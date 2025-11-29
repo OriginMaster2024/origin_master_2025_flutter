@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
+import 'package:origin_master_2025_flutter/result_overlay.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'bpm_overlay.dart';
@@ -160,51 +161,29 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                     'countdown': (context, game) =>
                         CountdownOverlay(game: game),
                     'gameOver': (context, game) {
-                      return Center(
-                        child: Container(
-                          color: Colors.black54,
-                          child: AlertDialog(
-                            title: Text('ゲームオーバー'),
-                            content: Text('敵の勝ちです！'),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  game.overlays.remove('gameOver');
-                                  game.resetGame();
-                                  Navigator.popUntil(
-                                    context,
-                                    (route) => route.isFirst,
-                                  );
-                                },
-                                child: Text('ホームへ戻る'),
-                              ),
-                            ],
-                          ),
-                        ),
+                      return ResultOverlay(
+                        type: ResultType.lose,
+                        onPressedBackButton: () {
+                          game.overlays.remove('gameOver');
+                          game.resetGame();
+                          Navigator.popUntil(
+                            context,
+                                (route) => route.isFirst,
+                          );
+                        },
                       );
                     },
                     'gameClear': (context, game) {
-                      return Center(
-                        child: Container(
-                          color: Colors.black54,
-                          child: AlertDialog(
-                            title: Text('ゲームクリア'),
-                            content: Text('あなたの勝ちです！'),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  game.overlays.remove('gameClear');
-                                  game.resetGame();
-                                  Navigator.popUntil(
-                                    context,
-                                    (route) => route.isFirst,
-                                  );
-                                },
-                                child: Text('ホームへ戻る'),
-                              ),
-                            ],
-                          ),
-                        ),
+                      return ResultOverlay(
+                        type: ResultType.win,
+                        onPressedBackButton: () {
+                          game.overlays.remove('gameClear');
+                          game.resetGame();
+                          Navigator.popUntil(
+                            context,
+                                (route) => route.isFirst,
+                          );
+                        },
                       );
                     },
                   },
