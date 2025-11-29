@@ -88,7 +88,7 @@ class LobbyScreen extends HookWidget {
               child: Text('Back to Home'),
             ),
             const SizedBox(height: 20),
-            if (userIDs.value.length > 2)
+            if (userIDs.value.length >= 2)
               ElevatedButton(
                 onPressed: () {
                   final opponentID = userIDs.value.firstWhere(
