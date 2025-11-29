@@ -2,11 +2,14 @@ import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 
 import 'bullet.dart';
+import 'dart:ui' as ui;
+import 'package:flutter/services.dart';
 
 class Turret extends PositionComponent {
   final TurretSpecs specs;
   final bool isEnemy;
   double timeSinceLastShot = 0.0;
+  ui.Image? image;
 
   int hp = 100;
 
@@ -15,6 +18,19 @@ class Turret extends PositionComponent {
     this.isEnemy = false,
   }) {
     size = specs.size;
+  }
+
+  @override
+  Future<void> onLoad() async {
+    image = await loadUiImage('assets/ship.png');
+    return super.onLoad();
+  }
+
+  Future<ui.Image> loadUiImage(String assetPath) async {
+    final ByteData data = await rootBundle.load(assetPath);
+    final ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List());
+    final ui.FrameInfo frameInfo = await codec.getNextFrame();
+    return frameInfo.image;
   }
 
   @override
@@ -51,6 +67,15 @@ class Turret extends PositionComponent {
       Rect.fromLTWH(0, barY, barWidth * (hp / 100), barHeight),
       Paint()..color = Colors.green,
     );
+
+    if (image != null) {
+      canvas.drawImageRect(
+          image!,
+          Rect.fromLTWH(0, 0, image!.width.toDouble(), image!.height.toDouble()),
+          Rect.fromLTWH(0, barY, barWidth, barWidth * 4 / 5),
+          Paint()
+      );
+    }
   }
 
   void shoot() {
