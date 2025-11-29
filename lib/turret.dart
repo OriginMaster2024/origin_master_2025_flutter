@@ -51,6 +51,14 @@ class Turret extends PositionComponent {
 
     // タレット本体
     canvas.drawRect(size.toRect(), Paint()..color = Colors.blue);
+    if (image != null) {
+      canvas.drawImageRect(
+          image!,
+          Rect.fromLTWH(0, 0, image!.width.toDouble(), image!.height.toDouble()),
+          Rect.fromLTWH(0, 0, size.x, size.x * 4 / 5),
+          Paint()
+      );
+    }
 
     // HPバー
     final barWidth = size.x;
@@ -68,15 +76,6 @@ class Turret extends PositionComponent {
       Rect.fromLTWH(0, barY, barWidth * (hp / 100), barHeight),
       Paint()..color = Colors.green,
     );
-
-    if (image != null) {
-      canvas.drawImageRect(
-          image!,
-          Rect.fromLTWH(0, 0, image!.width.toDouble(), image!.height.toDouble()),
-          Rect.fromLTWH(0, barY, barWidth, barWidth * 4 / 5),
-          Paint()
-      );
-    }
   }
 
   void shoot() {
