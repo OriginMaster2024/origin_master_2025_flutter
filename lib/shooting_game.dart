@@ -45,6 +45,8 @@ class ShootingGame extends FlameGame
     accelerometerEventStream().listen((event) {
       tiltX = event.x;
     });
+
+    pauseEngine();
   }
 
   @override
