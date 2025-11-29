@@ -192,10 +192,9 @@ class _GameScreenState extends State<GameScreen> {
             left: 16,
             right: 16,
             bottom: 40,
-            child: AnimatedBuilder(
-              animation: game,
-              builder: (context, child) {
-                final progress = game.stableProgress;
+            child: ValueListenableBuilder<double>(
+              valueListenable: game.stableProgress,
+              builder: (context, progress, _) {
                 return Container(
                   height: 20,
                   decoration: BoxDecoration(
@@ -204,7 +203,7 @@ class _GameScreenState extends State<GameScreen> {
                   ),
                   child: FractionallySizedBox(
                     alignment: Alignment.centerLeft,
-                    widthFactor: progress, // 0.0〜1.0
+                    widthFactor: progress,
                     child: Container(
                       decoration: BoxDecoration(
                         color: Colors.greenAccent.withValues(alpha: 0.8),

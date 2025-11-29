@@ -30,7 +30,7 @@ class ShootingGame extends FlameGame
   int turretLevel = 1; // 1:level1, 2:level2, 3:level3
   double stableCounter = 0.0; // isStable=true が続いた秒数
 
-  double get stableProgress => (stableCounter / 3.0).clamp(0.0, 1.0);
+  final ValueNotifier<double> stableProgress = ValueNotifier(0.0);
 
   bool isGameOver = false;
 
@@ -105,7 +105,8 @@ class ShootingGame extends FlameGame
       endGame(isPlayerWin: false);
     }
 
-    notifyListeners();
+    // UI に進捗 0〜1 を通知
+    stableProgress.value = (stableCounter / 3).clamp(0.0, 1.0);
   }
 
   void _initTurrets() {
