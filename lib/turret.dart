@@ -61,11 +61,11 @@ class Turret extends PositionComponent
 
     // 弾の当たり判定
     if (other is Bullet) {
-      if (!isEnemy && other.isEnemy) {
+      if (!isEnemy && other.type.isEnemy) {
         // 自分の場合はダメージ計算をする
         takeDamage(other.damage);
         other.removeFromParent();
-      } else if (isEnemy && !other.isEnemy) {
+      } else if (isEnemy && !other.type.isEnemy) {
         // 敵の場合は弾を消すだけ
         other.removeFromParent();
       }
@@ -106,7 +106,8 @@ class Turret extends PositionComponent
 
   void shoot() {
     // タレット中心位置
-    final bulletX = position.x + size.x / 2 - 2.5; // 弾の幅5の半分
+    final bulletType = BulletType.make(specs.level, isEnemy);
+    final bulletX = position.x + size.x / 2 - bulletType.size.x / 2; // 弾の幅の半分
     final bulletY = isEnemy
         ? position.y +
               size
@@ -114,7 +115,7 @@ class Turret extends PositionComponent
         : position.y; // プレイヤーは上から発射（弾の高さ20）
 
     final bulletPosition = Vector2(bulletX, bulletY);
-    final bullet = Bullet(bulletPosition, isEnemy: isEnemy);
+    final bullet = Bullet(bulletPosition, type: bulletType);
     parent?.add(bullet);
   }
 
@@ -140,21 +141,22 @@ class Turret extends PositionComponent
 }
 
 class TurretSpecs {
+  final int level; // レベル
   final double shotInterval; // 弾の発射間隔（秒）
   final Vector2 size; // 発射台のサイズ（幅・高さ）
 
-  TurretSpecs({required this.shotInterval, required this.size});
+  TurretSpecs({required this.level, required this.shotInterval, required this.size});
 
   static TurretSpecs getByLevel(int level) {
     switch (level) {
       case 1:
-        return TurretSpecs(shotInterval: 0.8, size: Vector2(40, 40 * 4 / 5));
+        return TurretSpecs(level: 1, shotInterval: 0.8, size: Vector2(40, 40 * 4 / 5));
       case 2:
-        return TurretSpecs(shotInterval: 0.5, size: Vector2(60, 60 * 4 / 5));
+        return TurretSpecs(level: 2, shotInterval: 0.5, size: Vector2(60, 60 * 4 / 5));
       case 3:
-        return TurretSpecs(shotInterval: 0.2, size: Vector2(80, 80 * 4 / 5));
+        return TurretSpecs(level: 3, shotInterval: 0.2, size: Vector2(80, 80 * 4 / 5));
       default:
-        return TurretSpecs(shotInterval: 0.8, size: Vector2(40, 40 * 4 / 5));
+        return TurretSpecs(level: 1, shotInterval: 0.8, size: Vector2(40, 40 * 4 / 5));
     }
   }
 }

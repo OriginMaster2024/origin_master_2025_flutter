@@ -62,6 +62,23 @@ class ShootingGame extends FlameGame
       playerTurret.x = size.x - playerTurret.specs.size.x;
     }
 
+    // 弾の当たり判定
+    for (final bullet in children.whereType<Bullet>()) {
+      if (bullet.type.isEnemy) {
+        // 敵の弾 → プレイヤーにヒットするか
+        if (bullet.toRect().overlaps(playerTurret.toRect())) {
+          playerTurret.takeDamage(10);
+          bullet.removeFromParent();
+        }
+      } else {
+        // プレイヤーの弾 → 敵にヒットするか
+        if (bullet.toRect().overlaps(enemyTurret.toRect())) {
+          enemyTurret.takeDamage(10);
+          bullet.removeFromParent();
+        }
+      }
+    }
+
     // BPMデータを参照（例: 発射間隔の調整などに使用可能）
     // これらの値はゲームロジックで使用可能です
     // ignore: unused_local_variable
