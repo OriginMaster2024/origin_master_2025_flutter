@@ -8,7 +8,14 @@ class Turret extends PositionComponent {
   final bool isEnemy;
   double timeSinceLastShot = 0.0;
 
-  Turret({required this.specs, this.isEnemy = false});
+  int hp = 100;
+
+  Turret({
+    required this.specs,
+    this.isEnemy = false,
+  }) {
+    size = specs.size;
+  }
 
   @override
   void update(double dt) {
@@ -24,7 +31,26 @@ class Turret extends PositionComponent {
   @override
   void render(Canvas canvas) {
     super.render(canvas);
-    canvas.drawRect(specs.size.toRect(), Paint()..color = Colors.blue);
+
+    // タレット本体
+    canvas.drawRect(size.toRect(), Paint()..color = Colors.blue);
+
+    // HPバー
+    final barWidth = size.x;
+    final barHeight = 5.0;
+    final barY = isEnemy ? -barHeight - 2 : size.y + 2; // 敵は上、プレイヤーは下
+
+    // 背景バー（灰色）
+    canvas.drawRect(
+      Rect.fromLTWH(0, barY, barWidth, barHeight),
+      Paint()..color = Colors.grey,
+    );
+
+    // HPバー（緑）
+    canvas.drawRect(
+      Rect.fromLTWH(0, barY, barWidth * (hp / 100), barHeight),
+      Paint()..color = Colors.green,
+    );
   }
 
   void shoot() {
@@ -35,9 +61,13 @@ class Turret extends PositionComponent {
         : position.y;    // プレイヤーは上から発射（弾の高さ20）
 
     final bulletPosition = Vector2(bulletX, bulletY);
-
     final bullet = Bullet(bulletPosition, isEnemy: isEnemy);
     parent?.add(bullet);
+  }
+
+  void takeDamage(int amount) {
+    hp -= amount;
+    if (hp < 0) hp = 0;
   }
 }
 
