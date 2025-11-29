@@ -16,92 +16,83 @@ class BpmOverlay extends StatelessWidget {
     return ListenableBuilder(
       listenable: bpmState,
       builder: (context, _) {
-        return Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: theme.colorScheme.surfaceContainerHighest.withValues(
-              alpha: 0.9,
-            ),
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(
-              color: theme.colorScheme.outline.withValues(alpha: 0.3),
-              width: 1,
-            ),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // HeartBPM
-              if (heartBPMWidget != null) ...[
-                heartBPMWidget!,
-                const SizedBox(width: 12),
-              ],
-
-              // BPM情報
-              SizedBox(
-                width: 88,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // BPM値
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.baseline,
-                      textBaseline: TextBaseline.alphabetic,
-                      children: [
-                        Text(
-                          '${bpmState.bpm}',
-                          style: theme.textTheme.headlineMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: theme.colorScheme.primary,
-                          ),
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          'BPM',
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant,
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    // 安定性
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          width: 8,
-                          height: 8,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: bpmState.isStable
-                                ? Colors.green
-                                : Colors.orange,
-                          ),
-                        ),
-                        const SizedBox(width: 6),
-                        Text(
-                          bpmState.isStable ? '安定' : '不安定',
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              // RawDataLineChart
-              const SizedBox(width: 12),
-              Expanded(
-                child: RawDataLineChart(rawData: bpmState.rawData, height: 64),
-              ),
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // HeartBPM
+            if (heartBPMWidget != null) ...[
+              heartBPMWidget!,
+              const SizedBox(width: 0),
             ],
-          ),
+
+            // BPM情報
+            SizedBox(
+              width: 0,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // BPM値
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.alphabetic,
+                    children: [
+                      Text(
+                        '${bpmState.bpm}',
+                        style: theme.textTheme.headlineMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: theme.colorScheme.primary,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        'BPM',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  // 安定性
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: 0,
+                        height: 0,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: bpmState.isStable
+                              ? Colors.green
+                              : Colors.orange,
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        bpmState.isStable ? '安定' : '不安定',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            // RawDataLineChart
+            // const SizedBox(width: 12),
+            Expanded(
+              child: RawDataLineChart(
+                rawData: bpmState.rawData,
+                height: 64,
+                backgroundColor: Colors.transparent,
+              ),
+            ),
+          ],
         );
       },
     );

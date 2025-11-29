@@ -37,6 +37,13 @@ class _GameScreenState extends State<GameScreen> {
     return Scaffold(
       body: Stack(
         children: [
+          // 背景画像
+          Image.asset(
+            'assets/game_background.png',
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: double.infinity,
+          ),
           // ゲーム画面
           GameWidget<ShootingGame>(
             game: game,
@@ -90,19 +97,18 @@ class _GameScreenState extends State<GameScreen> {
               },
             },
           ),
-          // 下部: BPM/安定性テキスト/グラフ
+          // BPM 波形を薄くオーバーレイ
           Positioned(
-            bottom: 0,
+            bottom: 140,
             left: 0,
             right: 0,
-            child: BpmOverlay(
-              bpmState: bpmState,
-              heartBPMWidget: SizedBox(
-                width: 64,
-                height: 64,
-                child: HeartBPM(
-                  cameraWidgetWidth: 64,
-                  cameraWidgetHeight: 64,
+            child: Opacity(
+              opacity: 0.3, // 薄くする
+              child: BpmOverlay(
+                bpmState: bpmState,
+                heartBPMWidget: HeartBPM(
+                  cameraWidgetWidth: 0,
+                  cameraWidgetHeight: 0,
                   alpha: 0.2,
                   onBPM: (bpm) {
                     bpmState.updateBpm(bpm);
