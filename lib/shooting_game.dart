@@ -11,7 +11,7 @@ class ShootingGame extends FlameGame {
 
   double timeSinceLastShot = 0;
   double tiltX = 0;
-  final double sensitivity = 10;
+  final double sensitivity = 20;
 
   final BpmState? bpmState;
 
@@ -24,18 +24,8 @@ class ShootingGame extends FlameGame {
 
   @override
   Future<void> onLoad() async {
-    // プレイヤータレットの初期位置
-    playerTurret.position = Vector2(
-      size.x / 2 - playerTurret.specs.size.x / 2,
-      size.y - playerTurret.specs.size.y - 20 - 88,
-    );
+    initTurretPositions();
     add(playerTurret);
-
-    // 敵タレットの固定位置（上部中央）
-    enemyTurret.position = Vector2(
-      size.x / 2 - enemyTurret.specs.size.x / 2,
-      70,
-    );
     add(enemyTurret);
 
     accelerometerEventStream().listen((event) {
@@ -86,5 +76,35 @@ class ShootingGame extends FlameGame {
       // 例: 発射間隔の調整、難易度の変更など
       // 使用例: playerTurret.specs.shotInterval = 0.5 + (currentBpm / 200.0);
     }
+
+    // ゲーム終了判定
+    if (playerTurret.hp <= 0) {
+      pauseEngine();
+      overlays.add('gameOver');
+    } else if (enemyTurret.hp <= 0) {
+      pauseEngine();
+      overlays.add('gameClear');
+    }
+  }
+
+  void initTurretPositions() {
+    playerTurret.position = Vector2(
+      size.x / 2 - playerTurret.specs.size.x / 2,
+      size.y - playerTurret.specs.size.y - 20 - 88,
+    );
+    enemyTurret.position = Vector2(
+      size.x / 2 - enemyTurret.specs.size.x / 2,
+      70,
+    );
+  }
+
+  void resetGame() {
+    playerTurret.hp = 100;
+    enemyTurret.hp = 100;
+
+    // 弾なども全部消す
+    children.whereType<Bullet>().forEach((b) => b.removeFromParent());
+
+    initTurretPositions();
   }
 }
