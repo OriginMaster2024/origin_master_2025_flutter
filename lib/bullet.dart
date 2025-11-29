@@ -76,7 +76,7 @@ enum BulletType {
   String get imagePath {
     switch (this) {
       case BulletType.playerLevel1:
-        return 'assets/grape.png';
+        return 'assets/tuna.png';
       case BulletType.playerLevel2:
         return 'assets/shrimp.png';
       case BulletType.playerLevel3:
@@ -93,7 +93,7 @@ enum BulletType {
   Vector2 get size {
     switch (this) {
       case BulletType.playerLevel1:
-        return Vector2(24, 32);
+        return Vector2(24, 18);
       case BulletType.playerLevel2:
         return Vector2(36, 30);
       case BulletType.playerLevel3:
