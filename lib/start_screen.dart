@@ -19,11 +19,14 @@ class StartScreen extends StatelessWidget {
             width: double.infinity,
             height: double.infinity,
           ),
+          // FIXME: 上下にアニメーションさせる
           Image.asset(
             'assets/start_cloud_left.png',
             fit: BoxFit.fitWidth,
             width: 256,
           ),
+          // FIXME: 右に寄せる
+          // FIXME: 上下にアニメーションさせる
           Image.asset(
             'assets/start_cloud_right.png',
             fit: BoxFit.fitWidth,
