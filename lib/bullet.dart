@@ -101,7 +101,7 @@ enum BulletType {
       case BulletType.enemyLevel1:
         return Vector2(5, 20);
       case BulletType.enemyLevel2:
-        return Vector2(40, 40);
+        return Vector2(36, 36);
       case BulletType.enemyLevel3:
         return Vector2(64, 64);
     }
