@@ -160,6 +160,22 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                     'countdown': (context, game) =>
                         CountdownOverlay(game: game),
                     'gameOver': (context, game) {
+                      return Container(
+                        width: double.infinity,
+                        color: Colors.black54,
+                        child: Column(
+                          children: [
+                            Text(
+                              'あなたの',
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.white,
+                                  fontFamily: 'Melonano'
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
                       return Center(
                         child: Container(
                           color: Colors.black54,
