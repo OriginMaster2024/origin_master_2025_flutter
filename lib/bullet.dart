@@ -83,6 +83,23 @@ enum BulletType {
     }
   }
 
+  Vector2 get size {
+    switch (this) {
+      case BulletType.playerLevel1:
+        return Vector2(5, 20);
+      case BulletType.playerLevel2:
+        return Vector2(5, 20);
+      case BulletType.playerLevel3:
+        return Vector2(5, 20);
+      case BulletType.enemyLevel1:
+        return Vector2(5, 20);
+      case BulletType.enemyLevel2:
+        return Vector2(5, 20);
+      case BulletType.enemyLevel3:
+        return Vector2(5, 20);
+    }
+  }
+
   static BulletType make(int level, bool isEnemy) {
     if (isEnemy) {
       if (level == 3) {
