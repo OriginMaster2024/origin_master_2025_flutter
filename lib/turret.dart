@@ -56,7 +56,6 @@ class Turret extends PositionComponent {
     super.render(canvas);
 
     // タレット本体
-    canvas.drawRect(size.toRect(), Paint()..color = Colors.blue);
     if (image != null) {
       canvas.drawImageRect(
           image!,
