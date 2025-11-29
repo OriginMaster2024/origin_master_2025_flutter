@@ -30,4 +30,4 @@ flutter:
   assets:
     - .env
     - assets/
-    - assets/music/Count_Down.mp3
+    - assets/music/
