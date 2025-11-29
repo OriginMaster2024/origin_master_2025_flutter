@@ -1,11 +1,11 @@
+import 'dart:ui' as ui;
+
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'bullet.dart';
-import 'dart:ui' as ui;
-import 'package:flutter/services.dart';
 
 class Turret extends PositionComponent with CollisionCallbacks {
   TurretSpecs specs;
@@ -23,6 +23,8 @@ class Turret extends PositionComponent with CollisionCallbacks {
   Future<void> onLoad() async {
     await super.onLoad();
     add(RectangleHitbox());
+    final imagePath = isEnemy ? 'assets/airplane.png' : 'assets/ship.png';
+    image = await loadUiImage(imagePath);
   }
 
   // specs の setter を作って size も更新
@@ -31,16 +33,11 @@ class Turret extends PositionComponent with CollisionCallbacks {
     size = specs.size.clone();
   }
 
-  @override
-  Future<void> onLoad() async {
-    final imagePath = isEnemy ? 'assets/airplane.png' : 'assets/ship.png';
-    image = await loadUiImage(imagePath);
-    return super.onLoad();
-  }
-
   Future<ui.Image> loadUiImage(String assetPath) async {
     final ByteData data = await rootBundle.load(assetPath);
-    final ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List());
+    final ui.Codec codec = await ui.instantiateImageCodec(
+      data.buffer.asUint8List(),
+    );
     final ui.FrameInfo frameInfo = await codec.getNextFrame();
     return frameInfo.image;
   }
@@ -74,10 +71,10 @@ class Turret extends PositionComponent with CollisionCallbacks {
     // タレット本体
     if (image != null) {
       canvas.drawImageRect(
-          image!,
-          Rect.fromLTWH(0, 0, image!.width.toDouble(), image!.height.toDouble()),
-          Rect.fromLTWH(0, 0, size.x, size.x * 4 / 5),
-          Paint()
+        image!,
+        Rect.fromLTWH(0, 0, image!.width.toDouble(), image!.height.toDouble()),
+        Rect.fromLTWH(0, 0, size.x, size.x * 4 / 5),
+        Paint(),
       );
     }
 
