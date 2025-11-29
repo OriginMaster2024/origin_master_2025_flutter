@@ -6,36 +6,25 @@ import 'bullet.dart';
 import 'turret.dart';
 
 class ShootingGame extends FlameGame {
-  late Turret playerTurret;
-  late Turret enemyTurret;
+  final Turret playerTurret = Turret(specs: TurretSpecs.getByLevel(1));
+  final Turret enemyTurret = Turret(specs: TurretSpecs.getByLevel(2), isEnemy: true);
 
   double timeSinceLastShot = 0;
   double tiltX = 0;
-  final double sensitivity = 10;
+  final double sensitivity = 20;
 
   final BpmState? bpmState;
 
-  ShootingGame({
-    required TurretSpecs playerSpec,
-    required TurretSpecs enemySpec,
-    this.bpmState,
-  }) : playerTurret = Turret(specs: playerSpec),
-       enemyTurret = Turret(specs: enemySpec, isEnemy: true);
+  int turretLevel = 1; // 1:level1, 2:level2, 3:level3
+  double stableCounter = 0.0; // isStable=true が続いた秒数
+  double unstableCounter = 0.0; // isStable=false が続いた秒数
+
+  ShootingGame({this.bpmState});
 
   @override
   Future<void> onLoad() async {
-    // プレイヤータレットの初期位置
-    playerTurret.position = Vector2(
-      size.x / 2 - playerTurret.specs.size.x / 2,
-      size.y - playerTurret.specs.size.y - 20 - 88,
-    );
+    initTurrets();
     add(playerTurret);
-
-    // 敵タレットの固定位置（上部中央）
-    enemyTurret.position = Vector2(
-      size.x / 2 - enemyTurret.specs.size.x / 2,
-      70,
-    );
     add(enemyTurret);
 
     accelerometerEventStream().listen((event) {
@@ -86,5 +75,61 @@ class ShootingGame extends FlameGame {
       // 例: 発射間隔の調整、難易度の変更など
       // 使用例: playerTurret.specs.shotInterval = 0.5 + (currentBpm / 200.0);
     }
+
+    // BPM 状態に応じたカウント
+    if (bpmState?.isStable == true) {
+      stableCounter += dt;
+      unstableCounter = 0.0;
+
+      // 3 秒以上安定していたらレベルアップ
+      if (stableCounter >= 3.0 && turretLevel < 3) {
+        turretLevel += 1;
+        playerTurret.specs = TurretSpecs.getByLevel(turretLevel);
+        playerTurret.size = playerTurret.specs.size.clone();
+        stableCounter = 0.0; // リセット
+      }
+    } else {
+      unstableCounter += dt;
+      stableCounter = 0.0;
+
+      // 0.2 秒以上不安定でレベルダウン
+      if (unstableCounter >= 0.2 && turretLevel > 1) {
+        turretLevel -= 1;
+        playerTurret.specs = TurretSpecs.getByLevel(turretLevel);
+        playerTurret.size = playerTurret.specs.size.clone();
+        unstableCounter = 0.0; // リセット
+      }
+    }
+
+    // ゲーム終了判定
+    if (playerTurret.hp <= 0) {
+      pauseEngine();
+      overlays.add('gameOver');
+    } else if (enemyTurret.hp <= 0) {
+      pauseEngine();
+      overlays.add('gameClear');
+    }
+  }
+
+  void initTurrets() {
+    playerTurret.specs = TurretSpecs.getByLevel(1);
+    playerTurret.position = Vector2(
+      size.x / 2 - playerTurret.specs.size.x / 2,
+      size.y - playerTurret.specs.size.y - 20 - 88,
+    );
+    playerTurret.hp = 100;
+
+    enemyTurret.position = Vector2(
+      size.x / 2 - enemyTurret.specs.size.x / 2,
+      70,
+    );
+    enemyTurret.hp = 100;
+  }
+
+  void resetGame() {
+    // 弾なども全部消す
+    children.whereType<Bullet>().forEach((b) => b.removeFromParent());
+
+    initTurrets();
   }
 }

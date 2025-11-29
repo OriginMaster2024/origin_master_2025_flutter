@@ -6,18 +6,24 @@ import 'dart:ui' as ui;
 import 'package:flutter/services.dart';
 
 class Turret extends PositionComponent {
-  final TurretSpecs specs;
+  TurretSpecs specs;
   final bool isEnemy;
   double timeSinceLastShot = 0.0;
   ui.Image? image;
 
-  int hp = 100;
+  int hp = 500;
 
   Turret({
     required this.specs,
     this.isEnemy = false,
   }) {
     size = specs.size;
+  }
+
+  // specs の setter を作って size も更新
+  set updateSpecs(TurretSpecs newSpecs) {
+    specs = newSpecs;
+    size = specs.size.clone();
   }
 
   @override
@@ -101,9 +107,17 @@ class TurretSpecs {
   final Vector2 size; // 発射台のサイズ（幅・高さ）
 
   TurretSpecs({required this.shotInterval, required this.size});
+
+  static TurretSpecs getByLevel(int level) {
+    switch (level) {
+      case 1:
+        return TurretSpecs(shotInterval: 0.8, size: Vector2(40, 20));
+      case 2:
+        return TurretSpecs(shotInterval: 0.5, size: Vector2(60, 30));
+      case 3:
+        return TurretSpecs(shotInterval: 0.2, size: Vector2(80, 40));
+      default:
+        return TurretSpecs(shotInterval: 0.8, size: Vector2(40, 20));
+    }
+  }
 }
-
-// 発射台パターン
-final bigSlowTurret = TurretSpecs(shotInterval: 0.8, size: Vector2(100, 30));
-
-final smallFastTurret = TurretSpecs(shotInterval: 0.3, size: Vector2(50, 20));
