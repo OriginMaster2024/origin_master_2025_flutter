@@ -55,3 +55,13 @@ class Bullet extends PositionComponent with HasGameReference<FlameGame> {
     return frameInfo.image;
   }
 }
+
+enum BulletType {
+  playerLevel1,
+  playerLevel2,
+  playerLevel3,
+
+  enemyLevel1,
+  enemyLevel2,
+  enemyLevel3;
+}
