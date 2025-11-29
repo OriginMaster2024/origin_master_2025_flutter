@@ -182,6 +182,15 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                                   fontFamily: 'Melonano'
                               ),
                             ),
+                            GestureDetector(
+                              onTap: () {
+                              },
+                              child: Image.asset(
+                                'assets/button_back.png',
+                                fit: BoxFit.fitWidth,
+                                width: 142,
+                              ),
+                            ),
                           ],
                         ),
                       );
