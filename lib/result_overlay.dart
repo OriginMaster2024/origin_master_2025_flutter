@@ -53,4 +53,13 @@ class ResultOverlay extends StatelessWidget {
 enum ResultType {
   win,
   lose;
+
+  String get title {
+    switch (this) {
+      case ResultType.win:
+        return 'かち！';
+      case ResultType.lose:
+        return 'まけ！';
+    }
+  }
 }
