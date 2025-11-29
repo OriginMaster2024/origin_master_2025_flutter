@@ -49,11 +49,12 @@ class StartScreen extends StatelessWidget {
                     ),
                     GestureDetector(
                       onTap: () {
-                        // GameWidget に遷移
+                        // ロビーに遷移
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => GameScreen(gameID: Uuid().v4()),
+                            builder: (context) =>
+                              LobbyScreen(myUserID: Uuid().v4()),
                           ),
                         );
                       },
