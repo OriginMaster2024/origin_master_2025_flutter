@@ -6,11 +6,10 @@ import 'package:flutter/services.dart';
 
 class Bullet extends PositionComponent with HasGameReference<FlameGame> {
   static const double speed = 300;
-  final bool isEnemy;
   final BulletType type;
   ui.Image? image;
 
-  Bullet(Vector2 position, {this.isEnemy = false, required this.type}) {
+  Bullet(Vector2 position, {required this.type}) {
     this.position = position;
     size = type.size;
   }
@@ -24,7 +23,7 @@ class Bullet extends PositionComponent with HasGameReference<FlameGame> {
 
   @override
   void render(Canvas canvas) {
-    final paint = Paint()..color = isEnemy ? Colors.red : Colors.green;
+    final paint = Paint()..color = type.isEnemy ? Colors.red : Colors.green;
     canvas.drawRect(size.toRect(), paint);
 
     // FIXME: サイズを変える
@@ -41,7 +40,7 @@ class Bullet extends PositionComponent with HasGameReference<FlameGame> {
   @override
   void update(double dt) {
     // 敵弾は下方向、プレイヤー弾は上方向
-    position.y += isEnemy ? speed * dt : -speed * dt;
+    position.y += type.isEnemy ? speed * dt : -speed * dt;
 
     // 画面外に出たら削除
     if (position.y + size.y < 0 || position.y > game.size.y) {

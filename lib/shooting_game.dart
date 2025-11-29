@@ -50,7 +50,7 @@ class ShootingGame extends FlameGame {
 
     // 弾の当たり判定
     for (final bullet in children.whereType<Bullet>()) {
-      if (bullet.isEnemy) {
+      if (bullet.type.isEnemy) {
         // 敵の弾 → プレイヤーにヒットするか
         if (bullet.toRect().overlaps(playerTurret.toRect())) {
           playerTurret.takeDamage(10);
