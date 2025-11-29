@@ -8,9 +8,9 @@ import 'game_screen.dart';
 const _broadcastEventGameStart = 'game_start';
 
 class LobbyScreen extends HookWidget {
-  const LobbyScreen({super.key, required this.userID});
+  const LobbyScreen({super.key, required this.myUserID});
 
-  final String userID;
+  final String myUserID;
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +48,7 @@ class LobbyScreen extends HookWidget {
         event: _broadcastEventGameStart,
         callback: (payload) {
           final participantIDs = List<String>.from(payload['participants']);
-          if (participantIDs.contains(userID)) {
+          if (participantIDs.contains(myUserID)) {
             final gameID = payload['game_id'] as String;
             Navigator.push(
               context,
@@ -62,7 +62,7 @@ class LobbyScreen extends HookWidget {
 
       channel.subscribe((status, error) async {
         if (status != RealtimeSubscribeStatus.subscribed) return;
-        await channel.track({'user_id': userID});
+        await channel.track({'user_id': myUserID});
       });
 
       return () {
@@ -92,12 +92,15 @@ class LobbyScreen extends HookWidget {
               ElevatedButton(
                 onPressed: () {
                   final opponentID = userIDs.value.firstWhere(
-                    (userID) => userID != userID,
+                    (userID) => userID != myUserID,
+                    orElse: () => '',
                   );
+                  if (opponentID.isEmpty) return;
+
                   channel.sendBroadcastMessage(
                     event: _broadcastEventGameStart,
                     payload: {
-                      'participants': [userID, opponentID],
+                      'participants': [myUserID, opponentID],
                       'game_id': Uuid().v4(),
                     },
                   );

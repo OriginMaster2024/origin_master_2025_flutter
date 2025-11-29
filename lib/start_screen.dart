@@ -46,7 +46,8 @@ class StartScreen extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => LobbyScreen(userID: Uuid().v4()),
+                        builder: (context) =>
+                            LobbyScreen(myUserID: Uuid().v4()),
                       ),
                     );
                   },
