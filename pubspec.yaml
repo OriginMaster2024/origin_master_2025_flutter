@@ -6,6 +6,7 @@ environment:
   sdk: ^3.10.1
 
 dependencies:
+  audioplayers: ^6.5.1
   fl_chart: ^0.69.0
   flutter:
     sdk: flutter
@@ -29,3 +30,4 @@ flutter:
   assets:
     - .env
     - assets/
+    - assets/music/Count_Down.mp3
