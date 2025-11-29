@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:origin_master_2025_flutter/shooting_game.dart';
 
 import 'bullet.dart';
+import 'damage_text.dart';
 
 class Turret extends PositionComponent
     with HasGameReference<ShootingGame>, CollisionCallbacks {
@@ -69,11 +70,23 @@ class Turret extends PositionComponent
         // 自分の場合はダメージ計算をする
         takeDamage(other.damage);
         other.removeFromParent();
+        // ダメージテキストを表示（右下あたり）
+        final damageText = DamageText(
+          position: Vector2(position.x + size.x - 10, position.y + size.y - 10),
+          damage: other.damage,
+        );
+        game.add(damageText);
       } else if (isEnemy && !other.type.isEnemy) {
         // 敵の場合は弾を消すだけ
         other.removeFromParent();
         // 敵ヒット時のコールバックを呼び出す
         game.onEnemyHit();
+        // ダメージテキストを表示（右下あたり）
+        final damageText = DamageText(
+          position: Vector2(position.x + size.x - 10, position.y + size.y - 10),
+          damage: other.damage,
+        );
+        game.add(damageText);
       }
     }
   }

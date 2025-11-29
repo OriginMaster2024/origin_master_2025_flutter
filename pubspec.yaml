@@ -32,6 +32,12 @@ flutter:
     - .env
     - assets/
     - assets/music/
+    - assets/fonts/
+
+  fonts:
+    - family: Melonano
+      fonts:
+        - asset: assets/fonts/Melonano_Ver.1.31.ttf
 
 flutter_native_splash:
   background_image: assets/splash.png
