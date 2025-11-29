@@ -45,5 +45,9 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>This App uses the camera to measure your heart rate.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This App uses the microphone to measure your heart rate.</string>
 </dict>
 </plist>
