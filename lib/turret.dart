@@ -1,5 +1,6 @@
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'bullet.dart';
 
@@ -74,6 +75,11 @@ class Turret extends PositionComponent {
   void takeDamage(int amount) {
     hp -= amount;
     if (hp < 0) hp = 0;
+
+    if (!isEnemy) {
+      // プレイヤーの場合のみ振動
+      HapticFeedback.lightImpact();
+    }
   }
 }
 
