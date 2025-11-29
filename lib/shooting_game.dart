@@ -133,7 +133,14 @@ class ShootingGame extends FlameGame
     enemyTurret.specs = TurretSpecs.getByLevel(level);
     enemyTurret.size = enemyTurret.specs.size.clone();
     enemyTurret.hp = hp;
-    enemyTurret.position = Vector2(size.x * percentX, size.y * percentY);
+
+    var positionX = size.x * percentX;
+    // 画面端で制限
+    if (percentX < 0) positionX = 0;
+    if (positionX + enemyTurret.specs.size.x > size.x) {
+      positionX = size.x - enemyTurret.specs.size.x;
+    }
+    enemyTurret.position = Vector2(positionX, size.y * percentY);
   }
 
   void endGame({required bool isPlayerWin}) {
