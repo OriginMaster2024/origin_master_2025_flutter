@@ -15,7 +15,11 @@ class Turret extends PositionComponent
   double timeSinceLastShot = 0.0;
   ui.Image? image;
 
-  int hp = 500;
+  static const int initialHp = 200;
+  int hp = initialHp;
+  void resetHp() {
+    hp = initialHp;
+  }
 
   Turret({required this.specs, this.isEnemy = false}) {
     size = specs.size;
@@ -99,7 +103,7 @@ class Turret extends PositionComponent
 
     // HPバー（緑）
     canvas.drawRect(
-      Rect.fromLTWH(0, barY, barWidth * (hp / 100), barHeight),
+      Rect.fromLTWH(0, barY, barWidth * (hp / initialHp), barHeight),
       Paint()..color = Colors.green,
     );
   }
