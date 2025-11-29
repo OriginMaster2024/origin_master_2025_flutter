@@ -1,14 +1,23 @@
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 
-class Bullet extends PositionComponent with HasGameReference<FlameGame> {
+class Bullet extends PositionComponent
+    with HasGameReference<FlameGame>, CollisionCallbacks {
   static const double speed = 300;
+  final int damage;
   final bool isEnemy;
 
-  Bullet(Vector2 position, {this.isEnemy = false}) {
+  Bullet(Vector2 position, {this.isEnemy = false, this.damage = 10}) {
     this.position = position;
     size = Vector2(5, 20);
+  }
+
+  @override
+  Future<void> onLoad() async {
+    await super.onLoad();
+    add(RectangleHitbox());
   }
 
   @override

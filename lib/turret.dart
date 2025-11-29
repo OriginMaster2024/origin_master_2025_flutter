@@ -1,21 +1,25 @@
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'bullet.dart';
 
-class Turret extends PositionComponent {
+class Turret extends PositionComponent with CollisionCallbacks {
   TurretSpecs specs;
   final bool isEnemy;
   double timeSinceLastShot = 0.0;
 
   int hp = 500;
 
-  Turret({
-    required this.specs,
-    this.isEnemy = false,
-  }) {
+  Turret({required this.specs, this.isEnemy = false}) {
     size = specs.size;
+  }
+
+  @override
+  Future<void> onLoad() async {
+    await super.onLoad();
+    add(RectangleHitbox());
   }
 
   // specs の setter を作って size も更新
@@ -32,6 +36,17 @@ class Turret extends PositionComponent {
     if (timeSinceLastShot >= specs.shotInterval) {
       shoot();
       timeSinceLastShot = 0.0;
+    }
+  }
+
+  @override
+  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
+    super.onCollision(intersectionPoints, other);
+
+    // 弾の当たり判定
+    if (other is Bullet && isEnemy != other.isEnemy) {
+      takeDamage(other.damage);
+      other.removeFromParent();
     }
   }
 
@@ -64,8 +79,10 @@ class Turret extends PositionComponent {
     // タレット中心位置
     final bulletX = position.x + size.x / 2 - 2.5; // 弾の幅5の半分
     final bulletY = isEnemy
-        ? position.y + size.y // 敵は下から発射
-        : position.y;    // プレイヤーは上から発射（弾の高さ20）
+        ? position.y +
+              size
+                  .y // 敵は下から発射
+        : position.y; // プレイヤーは上から発射（弾の高さ20）
 
     final bulletPosition = Vector2(bulletX, bulletY);
     final bullet = Bullet(bulletPosition, isEnemy: isEnemy);
