@@ -134,7 +134,6 @@ class RawDataLineChart extends StatelessWidget {
         height: height,
         decoration: BoxDecoration(
           color: effectiveBgColor,
-          borderRadius: BorderRadius.circular(12),
         ),
         child: const Center(child: Text('データ取得中...')),
       );
@@ -158,15 +157,13 @@ class RawDataLineChart extends StatelessWidget {
 
     return Container(
       height: height,
-      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: effectiveBgColor,
-        borderRadius: BorderRadius.circular(12),
       ),
       child: LineChart(
         LineChartData(
           gridData: FlGridData(
-            show: true,
+            show: false,
             drawVerticalLine: false,
             horizontalInterval: (maxY - minY) / 4,
             getDrawingHorizontalLine: (value) {

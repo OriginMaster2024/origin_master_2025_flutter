@@ -34,7 +34,7 @@ class StartScreen extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => GameScreen(gameID: 'cpu'),
+                        builder: (context) => GameScreen(gameID: Uuid().v4()),
                       ),
                     );
                   },

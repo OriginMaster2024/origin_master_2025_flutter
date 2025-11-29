@@ -1,23 +1,28 @@
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 import 'package:flutter/services.dart';
 
-class Bullet extends PositionComponent with HasGameReference<FlameGame> {
+class Bullet extends PositionComponent
+    with HasGameReference<FlameGame>, CollisionCallbacks {
   static const double speed = 300;
   final BulletType type;
+  final int damage;
+
   ui.Image? image;
 
-  Bullet(Vector2 position, {required this.type}) {
+  Bullet(Vector2 position, {required this.type, this.damage = 10}) {
     this.position = position;
     size = type.size;
   }
 
   @override
   Future<void> onLoad() async {
+    await super.onLoad();
     image = await loadUiImage(type.imagePath);
-    return super.onLoad();
+    add(RectangleHitbox());
   }
 
   @override
