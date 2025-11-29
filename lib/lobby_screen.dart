@@ -5,7 +5,7 @@ import 'package:uuid/uuid.dart';
 
 import 'game_screen.dart';
 
-final BROADCAST_EVENT_GAME_START = 'game_start';
+const _broadcastEventGameStart = 'game_start';
 
 class LobbyScreen extends HookWidget {
   const LobbyScreen({super.key, required this.userID});
@@ -45,7 +45,7 @@ class LobbyScreen extends HookWidget {
       });
 
       channel.onBroadcast(
-        event: BROADCAST_EVENT_GAME_START,
+        event: _broadcastEventGameStart,
         callback: (payload) {
           final participantIDs = List<String>.from(payload['participants']);
           if (participantIDs.contains(userID)) {
@@ -95,7 +95,7 @@ class LobbyScreen extends HookWidget {
                     (userID) => userID != userID,
                   );
                   channel.sendBroadcastMessage(
-                    event: BROADCAST_EVENT_GAME_START,
+                    event: _broadcastEventGameStart,
                     payload: {
                       'participants': [userID, opponentID],
                       'game_id': Uuid().v4(),
