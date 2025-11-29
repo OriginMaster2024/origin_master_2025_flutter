@@ -46,7 +46,23 @@ class StartScreen extends StatelessWidget {
                         fit: BoxFit.fitWidth,
                         width: 142,
                       ),
-                    )
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        // GameWidget に遷移
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => GameScreen(gameID: Uuid().v4()),
+                          ),
+                        );
+                      },
+                      child: Image.asset(
+                        'assets/button_battle.png',
+                        fit: BoxFit.fitWidth,
+                        width: 142,
+                      ),
+                    ),
                   ],
                 ),
               ],
