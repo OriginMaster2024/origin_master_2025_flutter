@@ -123,6 +123,34 @@ class _GameScreenState extends State<GameScreen> {
               ),
             ),
           ),
+          Positioned(
+            left: 16,
+            right: 16,
+            bottom: 40,
+            child: AnimatedBuilder(
+              animation: game,
+              builder: (context, child) {
+                final progress = game.stableProgress;
+                return Container(
+                  height: 20,
+                  decoration: BoxDecoration(
+                    color: Colors.white12,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: FractionallySizedBox(
+                    alignment: Alignment.centerLeft,
+                    widthFactor: progress, // 0.0〜1.0
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.greenAccent.withValues(alpha: 0.8),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
         ],
       ),
     );
