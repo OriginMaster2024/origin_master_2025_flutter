@@ -127,22 +127,63 @@ class Turret extends PositionComponent
       );
     }
 
-    // HPバー
+    // HPバー（ドット絵風、視認性向上）
     final barWidth = size.x;
-    final barHeight = 5.0;
-    final barY = isEnemy ? -barHeight - 2 : size.y + 2; // 敵は上、プレイヤーは下
+    final barHeight = 8.0; // 高さを増やして視認性向上
+    final barY = isEnemy ? -barHeight - 4 : size.y + 4; // 敵は上、プレイヤーは下
+    final hpRatio = hp / initialHp;
+    final hpBarWidth = barWidth * hpRatio;
 
-    // 背景バー（灰色）
+    // ドット絵風にするため、アンチエイリアスを無効化
+    final pixelPerfectPaint = Paint()..isAntiAlias = false;
+
+    // 外側のボーダー（黒）
+    final borderWidth = 2.0;
+    canvas.drawRect(
+      Rect.fromLTWH(
+        -borderWidth,
+        barY - borderWidth,
+        barWidth + borderWidth * 2,
+        barHeight + borderWidth * 2,
+      ),
+      pixelPerfectPaint..color = Colors.black,
+    );
+
+    // 背景バー（暗い赤/グレー）
     canvas.drawRect(
       Rect.fromLTWH(0, barY, barWidth, barHeight),
-      Paint()..color = Colors.grey,
+      pixelPerfectPaint..color = const Color(0xFF444444), // 暗いグレー
     );
 
-    // HPバー（緑）
-    canvas.drawRect(
-      Rect.fromLTWH(0, barY, barWidth * (hp / initialHp), barHeight),
-      Paint()..color = Colors.green,
-    );
+    // HPバー（明るい緑、ドット絵風）
+    if (hpBarWidth > 0) {
+      // HPが低い場合は赤に近づく
+      Color hpColor;
+      if (hpRatio > 0.6) {
+        hpColor = const Color(0xFF00FF00); // 明るい緑
+      } else if (hpRatio > 0.3) {
+        hpColor = const Color(0xFFFFAA00); // オレンジ
+      } else {
+        hpColor = const Color(0xFFFF0000); // 赤
+      }
+
+      // HPバーをピクセル単位で描画
+      final hpBarRect = Rect.fromLTWH(
+        0,
+        barY,
+        hpBarWidth.floorToDouble(),
+        barHeight,
+      );
+      canvas.drawRect(hpBarRect, pixelPerfectPaint..color = hpColor);
+
+      // ドット絵風のハイライト（上部に白い線）
+      if (hpBarWidth > 2) {
+        canvas.drawRect(
+          Rect.fromLTWH(0, barY, hpBarWidth.floorToDouble(), 1.0),
+          pixelPerfectPaint..color = Colors.white.withOpacity(0.5),
+        );
+      }
+    }
   }
 
   void shoot() {
