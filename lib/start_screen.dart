@@ -69,48 +69,6 @@ class StartScreen extends StatelessWidget {
               ],
             )
           ),
-          // 中央にタイトルとボタン
-          Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text(
-                  'Shooting Game',
-                  style: TextStyle(
-                    fontSize: 36,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: 40),
-                ElevatedButton(
-                  onPressed: () {
-                    // GameWidget に遷移
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => GameScreen(gameID: Uuid().v4()),
-                      ),
-                    );
-                  },
-                  child: const Text('Start Game'),
-                ),
-                const SizedBox(height: 24),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            LobbyScreen(myUserID: Uuid().v4()),
-                      ),
-                    );
-                  },
-                  child: const Text('Enter Lobby'),
-                ),
-              ],
-            ),
-          ),
         ],
       ),
     );
