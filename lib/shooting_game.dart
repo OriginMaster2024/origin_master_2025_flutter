@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/cupertino.dart';
@@ -5,6 +7,7 @@ import 'package:sensors_plus/sensors_plus.dart';
 
 import 'bpm_state.dart';
 import 'bullet.dart';
+import 'relief_supply.dart';
 import 'turret.dart';
 
 class ShootingGame extends FlameGame
@@ -20,6 +23,11 @@ class ShootingGame extends FlameGame
   double timeSinceLastShot = 0;
   double tiltX = 0;
   final double sensitivity = 20;
+
+  // 救援物資のスポーン管理
+  double _reliefSupplyTimer = 0.0;
+  double _nextReliefSupplySpawnTime = 0.0;
+  final math.Random _random = math.Random();
 
   final BpmState bpmState;
   final void Function({
@@ -58,6 +66,9 @@ class ShootingGame extends FlameGame
     accelerometerEventStream().listen((event) {
       tiltX = event.x;
     });
+
+    // 最初の救援物資スポーン時間を設定
+    _nextReliefSupplySpawnTime = 5.0 + _random.nextDouble() * 5.0; // 5〜10秒
 
     pauseEngine();
   }
@@ -122,6 +133,25 @@ class ShootingGame extends FlameGame
 
     // UI に進捗 0〜1 を通知
     stableProgress.value = (stableCounter / 3).clamp(0.0, 1.0);
+
+    // 救援物資のスポーン処理
+    if (!isGameOver) {
+      _reliefSupplyTimer += dt;
+      if (_reliefSupplyTimer >= _nextReliefSupplySpawnTime) {
+        _spawnReliefSupply();
+        _reliefSupplyTimer = 0.0;
+        _nextReliefSupplySpawnTime = 5.0 + _random.nextDouble() * 10.0; // 5〜15秒
+      }
+    }
+  }
+
+  void _spawnReliefSupply() {
+    // 画面上部のランダムなX位置からスポーン
+    final spawnX = _random.nextDouble() * (size.x - 40); // 救援物資の幅40を考慮
+    final reliefSupply = ReliefSupply(
+      position: Vector2(spawnX, -60), // 画面上部から開始
+    );
+    add(reliefSupply);
   }
 
   void _initTurrets() {
@@ -178,8 +208,13 @@ class ShootingGame extends FlameGame
   void resetGame() {
     // 弾なども全部消す
     children.whereType<Bullet>().forEach((b) => b.removeFromParent());
+    // 救援物資も全部消す
+    children.whereType<ReliefSupply>().forEach((r) => r.removeFromParent());
 
     _initTurrets();
+    // 救援物資タイマーをリセット
+    _reliefSupplyTimer = 0.0;
+    _nextReliefSupplySpawnTime = 10.0 + _random.nextDouble() * 10.0;
   }
 
   @override

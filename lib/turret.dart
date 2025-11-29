@@ -8,6 +8,8 @@ import 'package:origin_master_2025_flutter/shooting_game.dart';
 
 import 'bullet.dart';
 import 'damage_text.dart';
+import 'heal_text.dart';
+import 'relief_supply.dart';
 
 class Turret extends PositionComponent
     with HasGameReference<ShootingGame>, CollisionCallbacks {
@@ -102,6 +104,18 @@ class Turret extends PositionComponent
         );
         game.add(damageText);
       }
+    }
+
+    // 救援物資の当たり判定（プレイヤーのみ）
+    if (other is ReliefSupply && !isEnemy) {
+      heal(100);
+      other.removeFromParent();
+      // 回復テキストを表示（右下あたり）
+      final healText = HealText(
+        position: Vector2(position.x + size.x - 10, position.y + size.y - 10),
+        healAmount: 100,
+      );
+      game.add(healText);
     }
   }
 
@@ -213,6 +227,12 @@ class Turret extends PositionComponent
       // プレイヤーの場合のみ振動
       HapticFeedback.lightImpact();
     }
+  }
+
+  void heal(int amount) {
+    hp += amount;
+    // HP上限を超えないように制限
+    if (hp > initialHp) hp = initialHp;
   }
 
   /// 相手目線での自分の位置を返してくれる関数
