@@ -169,7 +169,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                             Text(
                               'あなたの',
                               style: TextStyle(
-                                  fontSize: 20,
+                                  fontSize: 32,
                                   color: Colors.white,
                                   fontFamily: 'Melonano'
                               ),
