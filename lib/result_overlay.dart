@@ -8,3 +8,8 @@ class ResultOverlay extends StatelessWidget {
     return const Placeholder();
   }
 }
+
+enum ResultType {
+  win,
+  lose;
+}
