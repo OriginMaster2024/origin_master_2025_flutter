@@ -173,6 +173,14 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                                   fontFamily: 'Melonano'
                               ),
                             ),
+                            Text(
+                              'かち！',
+                              style: TextStyle(
+                                  fontSize: 80,
+                                  color: Colors.white,
+                                  fontFamily: 'Melonano'
+                              ),
+                            ),
                           ],
                         ),
                       );
