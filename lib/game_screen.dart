@@ -174,27 +174,16 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                       );
                     },
                     'gameClear': (context, game) {
-                      return Center(
-                        child: Container(
-                          color: Colors.black54,
-                          child: AlertDialog(
-                            title: Text('ゲームクリア'),
-                            content: Text('あなたの勝ちです！'),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  game.overlays.remove('gameClear');
-                                  game.resetGame();
-                                  Navigator.popUntil(
-                                    context,
-                                    (route) => route.isFirst,
-                                  );
-                                },
-                                child: Text('ホームへ戻る'),
-                              ),
-                            ],
-                          ),
-                        ),
+                      return ResultOverlay(
+                        type: ResultType.win,
+                        onPressedBackButton: () {
+                          game.overlays.remove('gameClear');
+                          game.resetGame();
+                          Navigator.popUntil(
+                            context,
+                                (route) => route.isFirst,
+                          );
+                        },
                       );
                     },
                   },
