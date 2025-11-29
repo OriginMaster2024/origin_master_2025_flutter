@@ -22,7 +22,8 @@ class Turret extends PositionComponent {
 
   @override
   Future<void> onLoad() async {
-    image = await loadUiImage('assets/ship.png');
+    final imagePath = isEnemy ? 'assets/airplane.png' : 'assets/ship.png';
+    image = await loadUiImage(imagePath);
     return super.onLoad();
   }
 
