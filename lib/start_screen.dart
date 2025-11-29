@@ -13,7 +13,12 @@ class StartScreen extends StatelessWidget {
       body: Stack(
         children: [
           // 背景
-          Container(color: Colors.black87),
+          Image.asset(
+            'assets/start_background.png',
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: double.infinity,
+          ),
           // 中央にタイトルとボタン
           Center(
             child: Column(
