@@ -12,7 +12,7 @@ class Bullet extends PositionComponent with HasGameReference<FlameGame> {
 
   Bullet(Vector2 position, {this.isEnemy = false}) {
     this.position = position;
-    size = Vector2(5, 20);
+    size = type.size;
   }
 
   @override
