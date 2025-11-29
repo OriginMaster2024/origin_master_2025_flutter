@@ -1,14 +1,24 @@
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
+import 'dart:ui' as ui;
+import 'package:flutter/services.dart';
 
 class Bullet extends PositionComponent with HasGameReference<FlameGame> {
   static const double speed = 300;
   final bool isEnemy;
+  ui.Image? image;
 
   Bullet(Vector2 position, {this.isEnemy = false}) {
     this.position = position;
     size = Vector2(5, 20);
+  }
+
+  @override
+  Future<void> onLoad() async {
+    final imagePath = 'assets/grape.png';
+    image = await loadUiImage(imagePath);
+    return super.onLoad();
   }
 
   @override
@@ -26,5 +36,12 @@ class Bullet extends PositionComponent with HasGameReference<FlameGame> {
     if (position.y + size.y < 0 || position.y > game.size.y) {
       removeFromParent();
     }
+  }
+
+  Future<ui.Image> loadUiImage(String assetPath) async {
+    final ByteData data = await rootBundle.load(assetPath);
+    final ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List());
+    final ui.FrameInfo frameInfo = await codec.getNextFrame();
+    return frameInfo.image;
   }
 }
