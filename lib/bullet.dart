@@ -25,6 +25,16 @@ class Bullet extends PositionComponent with HasGameReference<FlameGame> {
   void render(Canvas canvas) {
     final paint = Paint()..color = isEnemy ? Colors.red : Colors.green;
     canvas.drawRect(size.toRect(), paint);
+
+    // FIXME: サイズを変える
+    if (image != null) {
+      canvas.drawImageRect(
+          image!,
+          Rect.fromLTWH(0, 0, image!.width.toDouble(), image!.height.toDouble()),
+          Rect.fromLTWH(0, 0, size.x, size.y),
+          Paint()
+      );
+    }
   }
 
   @override
