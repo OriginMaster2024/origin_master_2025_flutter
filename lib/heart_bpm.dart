@@ -55,6 +55,9 @@ class HeartBPM extends HookWidget {
     this.onStabilized,
     this.stabilityWindow = 10,
     this.stabilityThreshold = 10.0,
+    this.cameraWidgetWidth,
+    this.cameraWidgetHeight,
+    this.alpha = 0.2,
   });
 
   final void Function(int bpm) onBPM;
@@ -62,6 +65,9 @@ class HeartBPM extends HookWidget {
   final void Function(bool isStable, double stdDev)? onStabilized;
   final int stabilityWindow;
   final double stabilityThreshold;
+  final double? cameraWidgetWidth;
+  final double? cameraWidgetHeight;
+  final double alpha;
 
   @override
   Widget build(BuildContext context) {
@@ -74,11 +80,15 @@ class HeartBPM extends HookWidget {
       [stabilityWindow, stabilityThreshold],
     );
 
+    final screenWidth = MediaQuery.of(context).size.width;
+    final effectiveWidth = cameraWidgetWidth ?? screenWidth * 0.6;
+    final effectiveHeight = cameraWidgetHeight ?? screenWidth * 0.6;
+
     return HeartBPMDialog(
       context: context,
-      alpha: 0.2,
-      cameraWidgetWidth: MediaQuery.of(context).size.width * 0.6,
-      cameraWidgetHeight: MediaQuery.of(context).size.width * 0.6,
+      alpha: alpha,
+      cameraWidgetWidth: effectiveWidth,
+      cameraWidgetHeight: effectiveHeight,
       onBPM: (bpm) {
         onBPM(bpm);
         // 安定性を判定
@@ -172,7 +182,7 @@ class RawDataLineChart extends StatelessWidget {
             topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
             bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
             leftTitles: AxisTitles(
-              sideTitles: SideTitles(showTitles: true, reservedSize: 40),
+              sideTitles: SideTitles(showTitles: false, reservedSize: 40),
             ),
           ),
           borderData: FlBorderData(show: false),
