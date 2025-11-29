@@ -141,21 +141,22 @@ class Turret extends PositionComponent
 }
 
 class TurretSpecs {
+  final int level; // レベル
   final double shotInterval; // 弾の発射間隔（秒）
   final Vector2 size; // 発射台のサイズ（幅・高さ）
 
-  TurretSpecs({required this.shotInterval, required this.size});
+  TurretSpecs({required this.level, required this.shotInterval, required this.size});
 
   static TurretSpecs getByLevel(int level) {
     switch (level) {
       case 1:
-        return TurretSpecs(shotInterval: 0.8, size: Vector2(40, 40 * 4 / 5));
+        return TurretSpecs(level: 1, shotInterval: 0.8, size: Vector2(40, 40 * 4 / 5));
       case 2:
-        return TurretSpecs(shotInterval: 0.5, size: Vector2(60, 60 * 4 / 5));
+        return TurretSpecs(level: 2, shotInterval: 0.5, size: Vector2(60, 60 * 4 / 5));
       case 3:
-        return TurretSpecs(shotInterval: 0.2, size: Vector2(80, 80 * 4 / 5));
+        return TurretSpecs(level: 3, shotInterval: 0.2, size: Vector2(80, 80 * 4 / 5));
       default:
-        return TurretSpecs(shotInterval: 0.8, size: Vector2(40, 40 * 4 / 5));
+        return TurretSpecs(level: 1, shotInterval: 0.8, size: Vector2(40, 40 * 4 / 5));
     }
   }
 }
