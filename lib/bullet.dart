@@ -7,7 +7,7 @@ import 'package:flutter/services.dart';
 class Bullet extends PositionComponent with HasGameReference<FlameGame> {
   static const double speed = 300;
   final bool isEnemy;
-  final BulletType type = BulletType.enemyLevel1; // FIXME: constructorで受け取る
+  final BulletType type = BulletType.playerLevel1; // FIXME: constructorで受け取る
   ui.Image? image;
 
   Bullet(Vector2 position, {this.isEnemy = false}) {
@@ -86,7 +86,7 @@ enum BulletType {
   Vector2 get size {
     switch (this) {
       case BulletType.playerLevel1:
-        return Vector2(5, 20);
+        return Vector2(24, 32);
       case BulletType.playerLevel2:
         return Vector2(5, 20);
       case BulletType.playerLevel3:
