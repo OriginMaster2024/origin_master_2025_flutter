@@ -106,7 +106,7 @@ class Turret extends PositionComponent
 
   void shoot() {
     // タレット中心位置
-    final bulletType = BulletType.make(1, isEnemy); // FIXME: isEnemeyとlevelで初期化する
+    final bulletType = BulletType.make(specs.level, isEnemy);
     final bulletX = position.x + size.x / 2 - bulletType.size.x / 2; // 弾の幅の半分
     final bulletY = isEnemy
         ? position.y +
