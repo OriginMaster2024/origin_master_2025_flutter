@@ -57,8 +57,9 @@ class _GameScreenState extends State<GameScreen> {
                             game.overlays.remove('gameOver');
                             game.resumeEngine();
                             game.resetGame();
+                            Navigator.pop(context);
                           },
-                          child: Text('リスタート'),
+                          child: Text('ホームへ戻る'),
                         ),
                       ],
                     ),
@@ -78,8 +79,9 @@ class _GameScreenState extends State<GameScreen> {
                             game.overlays.remove('gameClear');
                             game.resumeEngine();
                             game.resetGame();
+                            Navigator.pop(context);
                           },
-                          child: Text('リスタート'),
+                          child: Text('ホームへ戻る'),
                         ),
                       ],
                     ),
