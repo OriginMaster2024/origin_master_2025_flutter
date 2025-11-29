@@ -25,7 +25,7 @@ class ResultOverlay extends StatelessWidget {
                 ),
               ),
               Text(
-                'かち！',
+                type.title,
                 style: TextStyle(
                     fontSize: 80,
                     color: Colors.white,
