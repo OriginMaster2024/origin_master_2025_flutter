@@ -33,7 +33,7 @@ jobs:
           cache: true
 
       - name: Setup dummy .env file
-        run: cp .env.example .env
+        run: cp .env.sample .env
 
       - name: Install dependencies
         run: flutter pub get
