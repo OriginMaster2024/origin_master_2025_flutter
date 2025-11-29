@@ -13,48 +13,76 @@ class StartScreen extends StatelessWidget {
       body: Stack(
         children: [
           // 背景
-          Container(color: Colors.black87),
-          // 中央にタイトルとボタン
+          Image.asset(
+            'assets/start_background.png',
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: double.infinity,
+          ),
+          // FIXME: 上下にアニメーションさせる
+          Image.asset(
+            'assets/start_cloud_left.png',
+            fit: BoxFit.fitWidth,
+            width: 256,
+          ),
+          // FIXME: 右に寄せる
+          // FIXME: 上下にアニメーションさせる
+          Image.asset(
+            'assets/start_cloud_right.png',
+            fit: BoxFit.fitWidth,
+            width: 195,
+          ),
           Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text(
-                  'Shooting Game',
-                  style: TextStyle(
-                    fontSize: 36,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
+                Image.asset(
+                  'assets/start_title.png',
+                  fit: BoxFit.fitWidth,
+                  width: 300,
                 ),
-                const SizedBox(height: 40),
-                ElevatedButton(
-                  onPressed: () {
-                    // GameWidget に遷移
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => GameScreen(gameID: Uuid().v4()),
+                const SizedBox(height: 80),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        // GameWidget に遷移
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => GameScreen(gameID: Uuid().v4()),
+                          ),
+                        );
+                      },
+                      child: Image.asset(
+                        'assets/button_training.png',
+                        fit: BoxFit.fitWidth,
+                        width: 142,
                       ),
-                    );
-                  },
-                  child: const Text('Start Game'),
-                ),
-                const SizedBox(height: 24),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            LobbyScreen(myUserID: Uuid().v4()),
+                    ),
+                    const SizedBox(width: 16),
+                    GestureDetector(
+                      onTap: () {
+                        // ロビーに遷移
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                              LobbyScreen(myUserID: Uuid().v4()),
+                          ),
+                        );
+                      },
+                      child: Image.asset(
+                        'assets/button_battle.png',
+                        fit: BoxFit.fitWidth,
+                        width: 142,
                       ),
-                    );
-                  },
-                  child: const Text('Enter Lobby'),
+                    ),
+                  ],
                 ),
               ],
-            ),
+            )
           ),
         ],
       ),
