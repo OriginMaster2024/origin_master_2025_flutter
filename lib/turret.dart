@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:origin_master_2025_flutter/shooting_game.dart';
 
 import 'bullet.dart';
+import 'damage_text.dart';
 
 class Turret extends PositionComponent
     with HasGameReference<ShootingGame>, CollisionCallbacks {
@@ -20,6 +21,11 @@ class Turret extends PositionComponent
   void resetHp() {
     hp = initialHp;
   }
+
+  // ダメージ演出用のフラッシュ状態
+  bool _isFlashing = false;
+  double _flashTimer = 0.0;
+  static const double _flashDuration = 0.1; // フラッシュの持続時間（秒）
 
   Turret({required this.specs, this.isEnemy = false}) {
     size = specs.size;
@@ -57,6 +63,15 @@ class Turret extends PositionComponent
       shoot();
       timeSinceLastShot = 0.0;
     }
+
+    // フラッシュタイマーの管理
+    if (_isFlashing) {
+      _flashTimer -= dt;
+      if (_flashTimer <= 0.0) {
+        _isFlashing = false;
+        _flashTimer = 0.0;
+      }
+    }
   }
 
   @override
@@ -69,9 +84,23 @@ class Turret extends PositionComponent
         // 自分の場合はダメージ計算をする
         takeDamage(other.damage);
         other.removeFromParent();
+        // ダメージテキストを表示（右下あたり）
+        final damageText = DamageText(
+          position: Vector2(position.x + size.x - 10, position.y + size.y - 10),
+          damage: other.damage,
+        );
+        game.add(damageText);
       } else if (isEnemy && !other.type.isEnemy) {
         // 敵の場合は弾を消すだけ
         other.removeFromParent();
+        // 敵ヒット時のコールバックを呼び出す
+        game.onEnemyHit();
+        // ダメージテキストを表示（右下あたり）
+        final damageText = DamageText(
+          position: Vector2(position.x + size.x - 10, position.y + size.y - 10),
+          damage: other.damage,
+        );
+        game.add(damageText);
       }
     }
   }
@@ -82,11 +111,19 @@ class Turret extends PositionComponent
 
     // タレット本体
     if (image != null) {
+      final paint = Paint();
+      if (_isFlashing) {
+        // フラッシュ中は白くブレンド
+        paint.colorFilter = const ColorFilter.mode(
+          Colors.white,
+          BlendMode.srcATop,
+        );
+      }
       canvas.drawImageRect(
         image!,
         Rect.fromLTWH(0, 0, image!.width.toDouble(), image!.height.toDouble()),
         Rect.fromLTWH(0, 0, size.x, size.x * 4 / 5),
-        Paint(),
+        paint,
       );
     }
 
@@ -127,6 +164,10 @@ class Turret extends PositionComponent
     hp -= amount;
     if (hp < 0) hp = 0;
 
+    // ダメージ演出：白フラッシュを開始
+    _isFlashing = true;
+    _flashTimer = _flashDuration;
+
     if (!isEnemy) {
       // プレイヤーの場合のみ振動
       HapticFeedback.lightImpact();
@@ -149,18 +190,38 @@ class TurretSpecs {
   final double shotInterval; // 弾の発射間隔（秒）
   final Vector2 size; // 発射台のサイズ（幅・高さ）
 
-  TurretSpecs({required this.level, required this.shotInterval, required this.size});
+  TurretSpecs({
+    required this.level,
+    required this.shotInterval,
+    required this.size,
+  });
 
   static TurretSpecs getByLevel(int level) {
     switch (level) {
       case 1:
-        return TurretSpecs(level: 1, shotInterval: 0.8, size: Vector2(40, 40 * 4 / 5));
+        return TurretSpecs(
+          level: 1,
+          shotInterval: 0.8,
+          size: Vector2(40, 40 * 4 / 5),
+        );
       case 2:
-        return TurretSpecs(level: 2, shotInterval: 0.5, size: Vector2(60, 60 * 4 / 5));
+        return TurretSpecs(
+          level: 2,
+          shotInterval: 0.5,
+          size: Vector2(60, 60 * 4 / 5),
+        );
       case 3:
-        return TurretSpecs(level: 3, shotInterval: 0.2, size: Vector2(80, 80 * 4 / 5));
+        return TurretSpecs(
+          level: 3,
+          shotInterval: 0.2,
+          size: Vector2(80, 80 * 4 / 5),
+        );
       default:
-        return TurretSpecs(level: 1, shotInterval: 0.8, size: Vector2(40, 40 * 4 / 5));
+        return TurretSpecs(
+          level: 1,
+          shotInterval: 0.8,
+          size: Vector2(40, 40 * 4 / 5),
+        );
     }
   }
 }
