@@ -23,6 +23,8 @@ class LobbyScreen extends HookWidget {
       [],
     );
 
+    final isStartButtonEnabled = userIDs.value.length >= 2;
+
     useEffect(() {
       channel.onPresenceJoin((payload) {
         userIDs.value = [
@@ -75,42 +77,71 @@ class LobbyScreen extends HookWidget {
     }, []);
 
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text('${userIDs.value.length} players waiting'),
-            const SizedBox(height: 20),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text('Back to Home'),
-            ),
-            const SizedBox(height: 20),
-            if (userIDs.value.length >= 2)
-              ElevatedButton(
-                onPressed: () {
-                  final opponentID = userIDs.value.firstWhere(
-                    (userID) => userID != myUserID,
-                    orElse: () => '',
-                  );
-                  if (opponentID.isEmpty) return;
+      body: Stack(
+        children: [
+          // 背景
+          Image.asset(
+            'assets/start_background.png',
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: double.infinity,
+          ),
 
-                  channel.sendBroadcastMessage(
-                    event: _broadcastEventGameStart,
-                    payload: {
-                      'participants': [myUserID, opponentID],
-                      'game_id': Uuid().v4(),
-                    },
-                  );
-                },
-                child: Text('Start Game'),
-              ),
-          ],
-        ),
+          Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  isStartButtonEnabled ? 'あいてがみつかりました！' : 'あいてをまっています...',
+                  style: TextStyle(fontSize: 20, fontFamily: 'Melonano'),
+                ),
+                const SizedBox(height: 40),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Image.asset(
+                        'assets/button_back.png',
+                        fit: BoxFit.fitWidth,
+                        width: 142,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    GestureDetector(
+                      onTap: isStartButtonEnabled
+                          ? () {
+                              final opponentID = userIDs.value.firstWhere(
+                                (userID) => userID != myUserID,
+                                orElse: () => '',
+                              );
+                              if (opponentID.isEmpty) return;
+
+                              channel.sendBroadcastMessage(
+                                event: _broadcastEventGameStart,
+                                payload: {
+                                  'participants': [myUserID, opponentID],
+                                  'game_id': Uuid().v4(),
+                                },
+                              );
+                            }
+                          : null,
+                      child: Image.asset(
+                        isStartButtonEnabled
+                            ? 'assets/button_start.png'
+                            : 'assets/button_start_disabled.png',
+                        fit: BoxFit.fitWidth,
+                        width: 142,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

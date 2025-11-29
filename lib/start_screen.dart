@@ -11,6 +11,7 @@ class StartScreen extends StatefulWidget {
   @override
   State<StartScreen> createState() => _StartScreenState();
 }
+
 class _StartScreenState extends State<StartScreen> {
   late final AudioPlayer _bgmPlayer;
 
@@ -81,7 +82,8 @@ class _StartScreenState extends State<StartScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => GameScreen(gameID: Uuid().v4()),
+                            builder: (context) =>
+                                GameScreen(gameID: Uuid().v4()),
                           ),
                         ).then((_) {
                           // ゲーム画面から戻ってきたタイミングで BGM を再生
@@ -104,7 +106,7 @@ class _StartScreenState extends State<StartScreen> {
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
-                              LobbyScreen(myUserID: Uuid().v4()),
+                                LobbyScreen(myUserID: Uuid().v4()),
                           ),
                         ).then((_) {
                           // ゲーム画面から戻ってきたタイミングで BGM を再生
@@ -120,7 +122,7 @@ class _StartScreenState extends State<StartScreen> {
                   ],
                 ),
               ],
-            )
+            ),
           ),
         ],
       ),
