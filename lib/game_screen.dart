@@ -5,7 +5,6 @@ import 'bpm_overlay.dart';
 import 'bpm_state.dart';
 import 'heart_bpm.dart';
 import 'shooting_game.dart';
-import 'turret.dart';
 
 class GameScreen extends StatefulWidget {
   const GameScreen({super.key, required this.gameID});
@@ -24,11 +23,7 @@ class _GameScreenState extends State<GameScreen> {
   void initState() {
     super.initState();
     bpmState = BpmState();
-    game = ShootingGame(
-      playerSpec: smallFastTurret,
-      enemySpec: bigSlowTurret,
-      bpmState: bpmState,
-    );
+    game = ShootingGame(bpmState: bpmState);
   }
 
   @override
