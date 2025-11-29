@@ -1,6 +1,7 @@
 import 'package:flame/game.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 
+import 'bullet.dart';
 import 'turret.dart';
 
 class ShootingGame extends FlameGame {
@@ -29,7 +30,7 @@ class ShootingGame extends FlameGame {
     // 敵タレットの固定位置（上部中央）
     enemyTurret.position = Vector2(
       size.x / 2 - enemyTurret.specs.size.x / 2,
-      50,
+      70,
     );
     add(enemyTurret);
 
@@ -49,6 +50,23 @@ class ShootingGame extends FlameGame {
     if (playerTurret.x < 0) playerTurret.x = 0;
     if (playerTurret.x + playerTurret.specs.size.x > size.x) {
       playerTurret.x = size.x - playerTurret.specs.size.x;
+    }
+
+    // 弾の当たり判定
+    for (final bullet in children.whereType<Bullet>()) {
+      if (bullet.isEnemy) {
+        // 敵の弾 → プレイヤーにヒットするか
+        if (bullet.toRect().overlaps(playerTurret.toRect())) {
+          playerTurret.takeDamage(10);
+          bullet.removeFromParent();
+        }
+      } else {
+        // プレイヤーの弾 → 敵にヒットするか
+        if (bullet.toRect().overlaps(enemyTurret.toRect())) {
+          enemyTurret.takeDamage(10);
+          bullet.removeFromParent();
+        }
+      }
     }
   }
 }
