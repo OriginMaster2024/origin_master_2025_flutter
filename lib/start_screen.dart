@@ -31,7 +31,13 @@ class StartScreen extends StatelessWidget {
                 const SizedBox(height: 40),
                 GestureDetector(
                   onTap: () {
-
+                    // GameWidget に遷移
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => GameScreen(gameID: Uuid().v4()),
+                      ),
+                    );
                   },
                   child: Image.asset(
                     'assets/button_training.png',
