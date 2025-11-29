@@ -38,7 +38,7 @@ class _CountdownOverlayState extends State<CountdownOverlay> {
       if (counter == 1) {
         timer.cancel();
         widget.game.overlays.remove('countdown');
-        widget.game.resumeEngine(); // ← ゲーム開始！
+        widget.game.startGame(); // ← ゲーム開始！
       } else {
         _playSoundAndHaptic();
         setState(() {

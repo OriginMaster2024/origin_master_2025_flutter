@@ -128,7 +128,6 @@ class _GameScreenState extends State<GameScreen> {
                         TextButton(
                           onPressed: () {
                             game.overlays.remove('gameOver');
-                            game.resumeEngine();
                             game.resetGame();
                             Navigator.popUntil(
                               context,
@@ -153,7 +152,6 @@ class _GameScreenState extends State<GameScreen> {
                         TextButton(
                           onPressed: () {
                             game.overlays.remove('gameClear');
-                            game.resumeEngine();
                             game.resetGame();
                             Navigator.popUntil(
                               context,

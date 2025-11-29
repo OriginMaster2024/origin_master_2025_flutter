@@ -1,11 +1,39 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:origin_master_2025_flutter/game_screen.dart';
 import 'package:uuid/uuid.dart';
 
 import 'lobby_screen.dart';
 
-class StartScreen extends StatelessWidget {
+class StartScreen extends StatefulWidget {
   const StartScreen({super.key});
+
+  @override
+  State<StartScreen> createState() => _StartScreenState();
+}
+class _StartScreenState extends State<StartScreen> {
+  late final AudioPlayer _bgmPlayer;
+
+  @override
+  void initState() {
+    super.initState();
+    _bgmPlayer = AudioPlayer();
+    _playBgm();
+  }
+
+  Future<void> _playBgm() async {
+    _bgmPlayer.setReleaseMode(ReleaseMode.loop);
+    _bgmPlayer.setSource(AssetSource('music/Home_Bgm.mp3'));
+    _bgmPlayer.seek(Duration.zero);
+    await _bgmPlayer.resume();
+  }
+
+  @override
+  void dispose() {
+    _bgmPlayer.stop();
+    _bgmPlayer.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,13 +75,18 @@ class StartScreen extends StatelessWidget {
                   children: [
                     GestureDetector(
                       onTap: () {
+                        _bgmPlayer.stop();
+
                         // GameWidget に遷移
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => GameScreen(gameID: Uuid().v4()),
                           ),
-                        );
+                        ).then((_) {
+                          // ゲーム画面から戻ってきたタイミングで BGM を再生
+                          _playBgm();
+                        });
                       },
                       child: Image.asset(
                         'assets/button_training.png',
@@ -64,6 +97,8 @@ class StartScreen extends StatelessWidget {
                     const SizedBox(width: 16),
                     GestureDetector(
                       onTap: () {
+                        _bgmPlayer.stop();
+
                         // ロビーに遷移
                         Navigator.push(
                           context,
@@ -71,7 +106,10 @@ class StartScreen extends StatelessWidget {
                             builder: (context) =>
                               LobbyScreen(myUserID: Uuid().v4()),
                           ),
-                        );
+                        ).then((_) {
+                          // ゲーム画面から戻ってきたタイミングで BGM を再生
+                          _playBgm();
+                        });
                       },
                       child: Image.asset(
                         'assets/button_battle.png',

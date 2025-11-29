@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:sensors_plus/sensors_plus.dart';
@@ -13,6 +14,8 @@ class ShootingGame extends FlameGame
     specs: TurretSpecs.getByLevel(2),
     isEnemy: true,
   );
+
+  late final AudioPlayer _bgmPlayer;
 
   double timeSinceLastShot = 0;
   double tiltX = 0;
@@ -38,6 +41,11 @@ class ShootingGame extends FlameGame
 
   @override
   Future<void> onLoad() async {
+    // プリロードして遅延を防ぐ
+    _bgmPlayer = AudioPlayer();
+    _bgmPlayer.setReleaseMode(ReleaseMode.loop);
+    await _bgmPlayer.setSource(AssetSource('music/Game_Bgm.mp3'));
+
     _initTurrets();
     add(playerTurret);
     add(enemyTurret);
@@ -145,7 +153,14 @@ class ShootingGame extends FlameGame
     enemyTurret.position = Vector2(positionX, size.y * percentY);
   }
 
+  void startGame() {
+    _bgmPlayer.seek(Duration.zero);
+    _bgmPlayer.resume();
+    resumeEngine();
+  }
+
   void endGame({required bool isPlayerWin}) {
+    _bgmPlayer.stop();
     isGameOver = true;
     pauseEngine();
     if (isPlayerWin) {
@@ -160,5 +175,13 @@ class ShootingGame extends FlameGame
     children.whereType<Bullet>().forEach((b) => b.removeFromParent());
 
     _initTurrets();
+  }
+
+  @override
+  void onRemove() {
+    // ゲーム終了時に停止して破棄
+    _bgmPlayer.stop();
+    _bgmPlayer.dispose();
+    super.onRemove();
   }
 }
