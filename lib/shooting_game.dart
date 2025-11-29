@@ -1,11 +1,13 @@
 import 'package:flame/game.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 
 import 'bpm_state.dart';
 import 'bullet.dart';
 import 'turret.dart';
 
-class ShootingGame extends FlameGame with HasCollisionDetection {
+class ShootingGame extends FlameGame
+    with HasCollisionDetection, ChangeNotifier {
   final Turret playerTurret = Turret(specs: TurretSpecs.getByLevel(1));
   final Turret enemyTurret = Turret(
     specs: TurretSpecs.getByLevel(2),
@@ -27,7 +29,8 @@ class ShootingGame extends FlameGame with HasCollisionDetection {
 
   int turretLevel = 1; // 1:level1, 2:level2, 3:level3
   double stableCounter = 0.0; // isStable=true が続いた秒数
-  double unstableCounter = 0.0; // isStable=false が続いた秒数
+
+  double get stableProgress => (stableCounter / 3.0).clamp(0.0, 1.0);
 
   bool isGameOver = false;
 
@@ -70,27 +73,21 @@ class ShootingGame extends FlameGame with HasCollisionDetection {
     // 使用例: playerTurret.specs.shotInterval = 0.5 + (currentBpm / 200.0);
 
     // BPM 状態に応じたカウント
-    if (isStable) {
-      stableCounter += dt;
-      unstableCounter = 0.0;
+    if (turretLevel < 3) {
+      if (isStable) {
+        stableCounter += dt;
 
-      // 3 秒以上安定していたらレベルアップ
-      if (stableCounter >= 3.0 && turretLevel < 3) {
-        turretLevel += 1;
-        playerTurret.specs = TurretSpecs.getByLevel(turretLevel);
-        playerTurret.size = playerTurret.specs.size.clone();
-        stableCounter = 0.0; // リセット
-      }
-    } else {
-      unstableCounter += dt;
-      stableCounter = 0.0;
-
-      // 0.2 秒以上不安定でレベルダウン
-      if (unstableCounter >= 0.2 && turretLevel > 1) {
-        turretLevel -= 1;
-        playerTurret.specs = TurretSpecs.getByLevel(turretLevel);
-        playerTurret.size = playerTurret.specs.size.clone();
-        unstableCounter = 0.0; // リセット
+        // 3 秒以上安定していたらレベルアップ
+        if (stableCounter >= 3.0 && turretLevel < 3) {
+          turretLevel += 1;
+          playerTurret.specs = TurretSpecs.getByLevel(turretLevel);
+          playerTurret.size = playerTurret.specs.size.clone();
+          if (turretLevel < 3) {
+            stableCounter = 0.0; // リセット
+          }
+        }
+      } else {
+        stableCounter = 0.0;
       }
     }
 
@@ -107,6 +104,8 @@ class ShootingGame extends FlameGame with HasCollisionDetection {
     if (playerTurret.hp <= 0 && !isGameOver) {
       endGame(isPlayerWin: false);
     }
+
+    notifyListeners();
   }
 
   void _initTurrets() {
