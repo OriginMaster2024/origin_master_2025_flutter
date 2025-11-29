@@ -161,7 +161,12 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                     'countdown': (context, game) =>
                         CountdownOverlay(game: game),
                     'gameOver': (context, game) {
-                      return ResultOverlay(type: ResultType.lose);
+                      return ResultOverlay(
+                        type: ResultType.lose,
+                        onPressedBackButton: () {
+
+                        },
+                      );
                       return Center(
                         child: Container(
                           color: Colors.black54,

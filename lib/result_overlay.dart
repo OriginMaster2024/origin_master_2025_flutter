@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 class ResultOverlay extends StatelessWidget {
   final ResultType type;
+  final VoidCallback onPressedBackButton;
 
-  const ResultOverlay({super.key, required this.type});
+  const ResultOverlay({super.key, required this.type, required this.onPressedBackButton});
 
   @override
   Widget build(BuildContext context) {
