@@ -4,6 +4,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'bpm_overlay.dart';
 import 'bpm_state.dart';
+import 'countdown_overlay.dart';
 import 'heart_bpm.dart';
 import 'shooting_game.dart';
 
@@ -63,6 +64,11 @@ class _GameScreenState extends State<GameScreen> {
       bpmState: bpmState,
       onTurretStateChange: _sendTurretState,
     );
+
+    // ← ここでカウントダウン overlay を表示させる
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      game.overlays.add('countdown');
+    });
   }
 
   @override
@@ -110,6 +116,7 @@ class _GameScreenState extends State<GameScreen> {
               return Image.asset('assets/game_background.png');
             },
             overlayBuilderMap: {
+              'countdown': (context, game) => CountdownOverlay(game: game),
               'gameOver': (context, game) {
                 return Center(
                   child: Container(
