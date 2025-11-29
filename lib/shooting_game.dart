@@ -1,6 +1,7 @@
 import 'package:flame/game.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 
+import 'bpm_state.dart';
 import 'bullet.dart';
 import 'turret.dart';
 
@@ -12,9 +13,12 @@ class ShootingGame extends FlameGame {
   double tiltX = 0;
   final double sensitivity = 10;
 
+  final BpmState? bpmState;
+
   ShootingGame({
     required TurretSpecs playerSpec,
     required TurretSpecs enemySpec,
+    this.bpmState,
   }) : playerTurret = Turret(specs: playerSpec),
        enemyTurret = Turret(specs: enemySpec, isEnemy: true);
 
@@ -23,7 +27,7 @@ class ShootingGame extends FlameGame {
     // プレイヤータレットの初期位置
     playerTurret.position = Vector2(
       size.x / 2 - playerTurret.specs.size.x / 2,
-      size.y - playerTurret.specs.size.y - 20,
+      size.y - playerTurret.specs.size.y - 20 - 88,
     );
     add(playerTurret);
 
@@ -67,6 +71,20 @@ class ShootingGame extends FlameGame {
           bullet.removeFromParent();
         }
       }
+    }
+
+    // BPMデータを参照（例: 発射間隔の調整などに使用可能）
+    if (bpmState != null) {
+      // これらの値はゲームロジックで使用可能です
+      // ignore: unused_local_variable
+      final currentBpm = bpmState!.bpm;
+      // ignore: unused_local_variable
+      final isStable = bpmState!.isStable;
+      // ignore: unused_local_variable
+      final stdDev = bpmState!.stdDev;
+      // ここでBPMデータをゲームロジックに反映できます
+      // 例: 発射間隔の調整、難易度の変更など
+      // 使用例: playerTurret.specs.shotInterval = 0.5 + (currentBpm / 200.0);
     }
   }
 }
