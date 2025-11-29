@@ -16,8 +16,7 @@ class Bullet extends PositionComponent with HasGameReference<FlameGame> {
 
   @override
   Future<void> onLoad() async {
-    final imagePath = 'assets/grape.png';
-    image = await loadUiImage(imagePath);
+    image = await loadUiImage(type.imagePath);
     return super.onLoad();
   }
 
