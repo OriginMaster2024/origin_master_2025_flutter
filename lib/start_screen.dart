@@ -20,11 +20,27 @@ class StartScreen extends StatelessWidget {
             height: double.infinity,
           ),
           Center(
-            child: Image.asset(
-              'assets/start_title.png',
-              fit: BoxFit.fitWidth,
-              width: 300,
-            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Image.asset(
+                  'assets/start_title.png',
+                  fit: BoxFit.fitWidth,
+                  width: 300,
+                ),
+                const SizedBox(height: 40),
+                GestureDetector(
+                  onTap: () {
+
+                  },
+                  child: Image.asset(
+                    'assets/button_training.png',
+                    fit: BoxFit.fitWidth,
+                    width: 142,
+                  ),
+                )
+              ],
+            )
           ),
           // 中央にタイトルとボタン
           Center(
