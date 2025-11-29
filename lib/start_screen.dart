@@ -48,18 +48,28 @@ class _StartScreenState extends State<StartScreen> {
             width: double.infinity,
             height: double.infinity,
           ),
-          // FIXME: 上下にアニメーションさせる
-          Image.asset(
-            'assets/start_cloud_left.png',
-            fit: BoxFit.fitWidth,
-            width: 256,
+          Positioned(
+            top: 40,
+            left: 0,
+            child:
+                // FIXME: 上下にアニメーションさせる
+                Image.asset(
+                  'assets/start_cloud_left.png',
+                  fit: BoxFit.fitWidth,
+                  width: 256,
+                ),
           ),
-          // FIXME: 右に寄せる
-          // FIXME: 上下にアニメーションさせる
-          Image.asset(
-            'assets/start_cloud_right.png',
-            fit: BoxFit.fitWidth,
-            width: 195,
+          Positioned(
+            top: -40,
+            right: 0,
+            child:
+                // FIXME: 右に寄せる
+                // FIXME: 上下にアニメーションさせる
+                Image.asset(
+                  'assets/start_cloud_right.png',
+                  fit: BoxFit.fitWidth,
+                  width: 195,
+                ),
           ),
           Center(
             child: Column(
