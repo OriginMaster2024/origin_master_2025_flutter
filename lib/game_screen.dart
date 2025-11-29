@@ -186,6 +186,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                                 ),
                               ],
                             ),
+                            const SizedBox(height: 48),
                             GestureDetector(
                               onTap: () {
                               },
