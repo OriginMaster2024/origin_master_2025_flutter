@@ -111,13 +111,13 @@ class TurretSpecs {
   static TurretSpecs getByLevel(int level) {
     switch (level) {
       case 1:
-        return TurretSpecs(shotInterval: 0.8, size: Vector2(40, 20));
+        return TurretSpecs(shotInterval: 0.8, size: Vector2(40, 40 * 4 / 5));
       case 2:
-        return TurretSpecs(shotInterval: 0.5, size: Vector2(60, 30));
+        return TurretSpecs(shotInterval: 0.5, size: Vector2(60, 60 * 4 / 5));
       case 3:
-        return TurretSpecs(shotInterval: 0.2, size: Vector2(80, 40));
+        return TurretSpecs(shotInterval: 0.2, size: Vector2(80, 80 * 4 / 5));
       default:
-        return TurretSpecs(shotInterval: 0.8, size: Vector2(40, 20));
+        return TurretSpecs(shotInterval: 0.8, size: Vector2(40, 40 * 4 / 5));
     }
   }
 }
