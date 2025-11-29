@@ -86,7 +86,7 @@ enum BulletType {
       case BulletType.enemyLevel2:
         return 'assets/apple.png';
       case BulletType.enemyLevel3:
-        return 'assets/grape.png';
+        return 'assets/watermelon.png';
     }
   }
 
@@ -103,7 +103,7 @@ enum BulletType {
       case BulletType.enemyLevel2:
         return Vector2(40, 40);
       case BulletType.enemyLevel3:
-        return Vector2(5, 20);
+        return Vector2(64, 64);
     }
   }
 
