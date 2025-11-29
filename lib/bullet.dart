@@ -66,6 +66,19 @@ enum BulletType {
   enemyLevel2,
   enemyLevel3;
 
+  bool get isEnemy {
+    switch (this) {
+      case BulletType.playerLevel1:
+      case BulletType.playerLevel2:
+      case BulletType.playerLevel3:
+          return false;
+      case BulletType.enemyLevel1:
+      case BulletType.enemyLevel2:
+      case BulletType.enemyLevel3:
+        return true;
+    }
+  }
+
   String get imagePath {
     switch (this) {
       case BulletType.playerLevel1:
