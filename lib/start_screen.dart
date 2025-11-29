@@ -47,6 +47,7 @@ class StartScreen extends StatelessWidget {
                         width: 142,
                       ),
                     ),
+                    const SizedBox(width: 16),
                     GestureDetector(
                       onTap: () {
                         // ロビーに遷移
