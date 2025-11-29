@@ -22,6 +22,11 @@ class Turret extends PositionComponent
     hp = initialHp;
   }
 
+  // ダメージ演出用のフラッシュ状態
+  bool _isFlashing = false;
+  double _flashTimer = 0.0;
+  static const double _flashDuration = 0.1; // フラッシュの持続時間（秒）
+
   Turret({required this.specs, this.isEnemy = false}) {
     size = specs.size;
   }
@@ -57,6 +62,15 @@ class Turret extends PositionComponent
     if (timeSinceLastShot >= specs.shotInterval) {
       shoot();
       timeSinceLastShot = 0.0;
+    }
+
+    // フラッシュタイマーの管理
+    if (_isFlashing) {
+      _flashTimer -= dt;
+      if (_flashTimer <= 0.0) {
+        _isFlashing = false;
+        _flashTimer = 0.0;
+      }
     }
   }
 
@@ -97,11 +111,19 @@ class Turret extends PositionComponent
 
     // タレット本体
     if (image != null) {
+      final paint = Paint();
+      if (_isFlashing) {
+        // フラッシュ中は白くブレンド
+        paint.colorFilter = const ColorFilter.mode(
+          Colors.white,
+          BlendMode.srcATop,
+        );
+      }
       canvas.drawImageRect(
         image!,
         Rect.fromLTWH(0, 0, image!.width.toDouble(), image!.height.toDouble()),
         Rect.fromLTWH(0, 0, size.x, size.x * 4 / 5),
-        Paint(),
+        paint,
       );
     }
 
@@ -141,6 +163,10 @@ class Turret extends PositionComponent
   void takeDamage(int amount) {
     hp -= amount;
     if (hp < 0) hp = 0;
+
+    // ダメージ演出：白フラッシュを開始
+    _isFlashing = true;
+    _flashTimer = _flashDuration;
 
     if (!isEnemy) {
       // プレイヤーの場合のみ振動
