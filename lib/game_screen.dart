@@ -166,10 +166,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                         onPressedBackButton: () {
                           game.overlays.remove('gameOver');
                           game.resetGame();
-                          Navigator.popUntil(
-                            context,
-                                (route) => route.isFirst,
-                          );
+                          Navigator.popUntil(context, (route) => route.isFirst);
                         },
                       );
                     },
@@ -179,10 +176,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                         onPressedBackButton: () {
                           game.overlays.remove('gameClear');
                           game.resetGame();
-                          Navigator.popUntil(
-                            context,
-                                (route) => route.isFirst,
-                          );
+                          Navigator.popUntil(context, (route) => route.isFirst);
                         },
                       );
                     },
@@ -217,31 +211,82 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
               ),
             ),
           ),
+
           Positioned(
             left: 16,
             right: 16,
             bottom: 40,
-            child: ValueListenableBuilder<double>(
-              valueListenable: game.stableProgress,
-              builder: (context, progress, _) {
-                return Container(
-                  height: 20,
-                  decoration: BoxDecoration(
-                    color: Colors.white12,
-                    borderRadius: BorderRadius.circular(10),
+            child: Row(
+              children: [
+                SizedBox(
+                  width: 96,
+                  child: ListenableBuilder(
+                    listenable: bpmState,
+                    builder: (context, _) {
+                      return Row(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.baseline,
+                        textBaseline: TextBaseline.alphabetic,
+                        children: [
+                          Text(
+                            '${bpmState.bpm}'.padLeft(3, ' '),
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontFamily: 'Melonano',
+                            ),
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            'BPM',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontFamily: 'Melonano',
+                            ),
+                          ),
+                        ],
+                      );
+                    },
                   ),
-                  child: FractionallySizedBox(
-                    alignment: Alignment.centerLeft,
-                    widthFactor: progress,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.greenAccent.withValues(alpha: 0.8),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
+                ),
+                // ドット絵風プログレスバー
+                Expanded(
+                  child: ValueListenableBuilder<double>(
+                    valueListenable: game.stableProgress,
+                    builder: (context, progress, _) {
+                      return Container(
+                        height: 16,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF444444), // 暗いグレー背景
+                          border: Border.all(
+                            color: Colors.black,
+                            width: 2,
+                          ), // 黒いボーダー
+                        ),
+                        child: FractionallySizedBox(
+                          alignment: Alignment.centerLeft,
+                          widthFactor: progress,
+                          child: Stack(
+                            children: [
+                              // メインのバー（明るい緑）
+                              Container(color: const Color(0xFF00FF00)),
+                              // ドット絵風ハイライト（上部に白い線）
+                              Positioned(
+                                top: 0,
+                                left: 0,
+                                right: 0,
+                                height: 2,
+                                child: Container(
+                                  color: Colors.white.withValues(alpha: 0.5),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
+                ),
+              ],
             ),
           ),
         ],
