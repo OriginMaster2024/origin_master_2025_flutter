@@ -232,9 +232,9 @@ class ShootingGame extends FlameGame
     enemyTurret.position = Vector2(positionX, positionY);
   }
 
-  void startGame() {
-    _bgmPlayer.seek(Duration.zero);
-    _bgmPlayer.resume();
+  Future<void> startGame() async {
+    await _bgmPlayer.seek(Duration.zero);
+    await _bgmPlayer.resume();
     resumeEngine();
   }
 

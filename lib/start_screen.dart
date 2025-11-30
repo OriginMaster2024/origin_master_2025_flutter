@@ -25,9 +25,9 @@ class _StartScreenState extends State<StartScreen> {
   }
 
   Future<void> _playBgm() async {
-    _bgmPlayer.setReleaseMode(ReleaseMode.loop);
-    _bgmPlayer.setSource(AssetSource('music/Home_Bgm.mp3'));
-    _bgmPlayer.seek(Duration.zero);
+    await _bgmPlayer.setReleaseMode(ReleaseMode.loop);
+    await _bgmPlayer.setSource(AssetSource('music/Home_Bgm.mp3'));
+    await _bgmPlayer.seek(Duration.zero);
     await _bgmPlayer.resume();
   }
 
