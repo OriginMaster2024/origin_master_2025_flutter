@@ -54,7 +54,7 @@ class HeartBPM extends HookWidget {
     this.onRawData,
     this.onStabilized,
     this.stabilityWindow = 10,
-    this.stabilityThreshold = 10.0,
+    this.stabilityThreshold = 5.0,
     this.cameraWidgetWidth,
     this.cameraWidgetHeight,
     this.alpha = 0.2,
@@ -132,9 +132,7 @@ class RawDataLineChart extends StatelessWidget {
     if (rawData.isEmpty) {
       return Container(
         height: height,
-        decoration: BoxDecoration(
-          color: effectiveBgColor,
-        ),
+        decoration: BoxDecoration(color: effectiveBgColor),
         child: const Center(child: Text('データ取得中...')),
       );
     }
@@ -157,9 +155,7 @@ class RawDataLineChart extends StatelessWidget {
 
     return Container(
       height: height,
-      decoration: BoxDecoration(
-        color: effectiveBgColor,
-      ),
+      decoration: BoxDecoration(color: effectiveBgColor),
       child: LineChart(
         LineChartData(
           gridData: FlGridData(
