@@ -4,12 +4,10 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'shooting_game.dart';
-
 class CountdownOverlay extends StatefulWidget {
-  final ShootingGame game;
+  final void Function() onCountdownFinished;
 
-  const CountdownOverlay({super.key, required this.game});
+  const CountdownOverlay({super.key, required this.onCountdownFinished});
 
   @override
   State<CountdownOverlay> createState() => _CountdownOverlayState();
@@ -37,8 +35,7 @@ class _CountdownOverlayState extends State<CountdownOverlay> {
     Timer.periodic(const Duration(seconds: 1), (timer) {
       if (counter == 1) {
         timer.cancel();
-        widget.game.overlays.remove('countdown');
-        widget.game.startGame(); // ← ゲーム開始！
+        widget.onCountdownFinished();
       } else {
         _playSoundAndHaptic();
         setState(() {

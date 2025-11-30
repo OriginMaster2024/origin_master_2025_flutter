@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 
 import 'bpm_state.dart';
@@ -91,7 +92,12 @@ class ShootingGame extends FlameGame
     // BPM 40以下で凍結
     final frozen = currentBpm <= 40;
     playerTurret.isFrozen = frozen;
-    isFrozenNotifier.value = frozen;
+    // ビルドフェーズと競合しないよう、フレーム後に ValueNotifier を更新
+    if (isFrozenNotifier.value != frozen) {
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        isFrozenNotifier.value = frozen;
+      });
+    }
 
     // 凍結中は移動しない
     if (!playerTurret.isFrozen) {
@@ -159,8 +165,13 @@ class ShootingGame extends FlameGame
       endGame(isPlayerWin: false);
     }
 
-    // UI に進捗 0〜1 を通知
-    stableProgress.value = (stableCounter / 5).clamp(0.0, 1.0);
+    // UI に進捗 0〜1 を通知（ビルドフェーズと競合しないよう、フレーム後に更新）
+    final newProgress = (stableCounter / 5).clamp(0.0, 1.0);
+    if (stableProgress.value != newProgress) {
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        stableProgress.value = newProgress;
+      });
+    }
 
     // 救援物資のスポーン処理
     if (!isGameOver) {

@@ -11,6 +11,7 @@ import 'bpm_state.dart';
 import 'countdown_overlay.dart';
 import 'heart_bpm.dart';
 import 'shooting_game.dart';
+import 'training_overlay.dart';
 
 class GameScreen extends StatefulWidget {
   const GameScreen({super.key, required this.gameID});
@@ -164,8 +165,16 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                     return Image.asset('assets/game_background.png');
                   },
                   overlayBuilderMap: {
-                    'countdown': (context, game) =>
-                        CountdownOverlay(game: game),
+                    'countdown': (context, game) => CountdownOverlay(
+                      onCountdownFinished: () {
+                        game.overlays.remove('countdown');
+                        game.startGame();
+                        if (widget.gameID.startsWith('training-')) {
+                          game.overlays.add('training');
+                        }
+                      },
+                    ),
+                    'training': (context, game) => TrainingOvelay(),
                     'gameOver': (context, game) {
                       return ResultOverlay(
                         type: ResultType.lose,

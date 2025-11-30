@@ -97,7 +97,7 @@ class _StartScreenState extends State<StartScreen> {
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
-                                GameScreen(gameID: Uuid().v4()),
+                                GameScreen(gameID: 'training-${Uuid().v4()}'),
                           ),
                         ).then((_) {
                           // ゲーム画面から戻ってきたタイミングで BGM を再生
