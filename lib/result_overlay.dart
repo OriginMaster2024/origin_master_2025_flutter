@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:origin_master_2025_flutter/button_tap_sound_service.dart';
 
 class ResultOverlay extends StatelessWidget {
   final ResultType type;
@@ -40,6 +41,8 @@ class ResultOverlay extends StatelessWidget {
           GestureDetector(
             onTap: () {
               HapticFeedback.mediumImpact();
+              ButtonTapSoundService().playTapSound();
+
               onPressedBackButton();
             },
             child: Image.asset(

@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:origin_master_2025_flutter/game_screen.dart';
 import 'package:uuid/uuid.dart';
 
+import 'button_tap_sound_service.dart';
 import 'lobby_screen.dart';
 
 class StartScreen extends StatefulWidget {
@@ -89,6 +90,7 @@ class _StartScreenState extends State<StartScreen> {
                       onTap: () {
                         _bgmPlayer.stop();
                         HapticFeedback.mediumImpact();
+                        ButtonTapSoundService().playTapSound();
 
                         // GameWidget に遷移
                         Navigator.push(
@@ -112,6 +114,7 @@ class _StartScreenState extends State<StartScreen> {
                     GestureDetector(
                       onTap: () {
                         HapticFeedback.mediumImpact();
+                        ButtonTapSoundService().playTapSound();
 
                         // ロビーに遷移
                         Navigator.push(
