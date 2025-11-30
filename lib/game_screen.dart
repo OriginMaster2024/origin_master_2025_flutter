@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:flame/extensions.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:origin_master_2025_flutter/result_overlay.dart';
@@ -255,38 +256,55 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                 ),
                 // ドット絵風プログレスバー
                 Expanded(
-                  child: ValueListenableBuilder<double>(
-                    valueListenable: game.stableProgress,
-                    builder: (context, progress, _) {
-                      return Container(
-                        height: 16,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF444444), // 暗いグレー背景
-                          border: Border.all(
-                            color: Colors.black,
-                            width: 2,
-                          ), // 黒いボーダー
-                        ),
-                        child: FractionallySizedBox(
-                          alignment: Alignment.centerLeft,
-                          widthFactor: progress,
-                          child: Stack(
-                            children: [
-                              // メインのバー（明るい緑）
-                              Container(color: const Color(0xFF00FF00)),
-                              // ドット絵風ハイライト（上部に白い線）
-                              Positioned(
-                                top: 0,
-                                left: 0,
-                                right: 0,
-                                height: 2,
-                                child: Container(
-                                  color: Colors.white.withValues(alpha: 0.5),
-                                ),
-                              ),
-                            ],
+                  child: ValueListenableBuilder<bool>(
+                    valueListenable: game.isFrozenNotifier,
+                    builder: (context, isFrozen, _) {
+                      if (isFrozen) {
+                        return Text(
+                          '40BPMいじょうでかいとう！',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontFamily: 'Melonano',
+                            color: Colors.red.darken(0.3),
                           ),
-                        ),
+                        );
+                      }
+                      return ValueListenableBuilder<double>(
+                        valueListenable: game.stableProgress,
+                        builder: (context, progress, _) {
+                          return Container(
+                            height: 16,
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF444444), // 暗いグレー背景
+                              border: Border.all(
+                                color: Colors.black,
+                                width: 2,
+                              ), // 黒いボーダー
+                            ),
+                            child: FractionallySizedBox(
+                              alignment: Alignment.centerLeft,
+                              widthFactor: progress,
+                              child: Stack(
+                                children: [
+                                  // メインのバー（明るい緑）
+                                  Container(color: const Color(0xFF00FF00)),
+                                  // ドット絵風ハイライト（上部に白い線）
+                                  Positioned(
+                                    top: 0,
+                                    left: 0,
+                                    right: 0,
+                                    height: 2,
+                                    child: Container(
+                                      color: Colors.white.withValues(
+                                        alpha: 0.5,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
                       );
                     },
                   ),

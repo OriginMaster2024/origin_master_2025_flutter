@@ -48,6 +48,7 @@ class ShootingGame extends FlameGame
   double stableCounter = 0.0; // isStable=true が続いた秒数
 
   final ValueNotifier<double> stableProgress = ValueNotifier(0.0);
+  final ValueNotifier<bool> isFrozenNotifier = ValueNotifier(false);
 
   bool isGameOver = false;
 
@@ -88,7 +89,9 @@ class ShootingGame extends FlameGame
     final stdDev = bpmState.stdDev;
 
     // BPM 40以下で凍結
-    playerTurret.isFrozen = currentBpm <= 40;
+    final frozen = currentBpm <= 40;
+    playerTurret.isFrozen = frozen;
+    isFrozenNotifier.value = frozen;
 
     // 凍結中は移動しない
     if (!playerTurret.isFrozen) {
