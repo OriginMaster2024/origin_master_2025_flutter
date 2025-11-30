@@ -237,11 +237,12 @@ class Turret extends PositionComponent
 
   /// 相手目線での自分の位置を返してくれる関数
   /// 相手にbroadcastで位置情報を送る際にこの値を渡す
-  Vector2 getMirroredPercentPosition() {
-    final mirroredPosition = game.size - position;
+  Vector2 getMirroredCenterPercentPosition() {
+    final center = position + size / 2;
+    final mirroredCenterPosition = game.size - center;
     return Vector2(
-      mirroredPosition.x / game.size.x,
-      mirroredPosition.y / game.size.y,
+      mirroredCenterPosition.x / game.size.x,
+      mirroredCenterPosition.y / game.size.y,
     );
   }
 }
