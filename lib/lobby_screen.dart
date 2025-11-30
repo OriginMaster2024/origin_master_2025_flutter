@@ -1,5 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
@@ -107,6 +108,7 @@ class LobbyScreen extends HookWidget {
                   children: [
                     GestureDetector(
                       onTap: () {
+                        HapticFeedback.mediumImpact();
                         Navigator.pop(context, true);
                       },
                       child: Image.asset(
@@ -119,6 +121,7 @@ class LobbyScreen extends HookWidget {
                     GestureDetector(
                       onTap: isStartButtonEnabled
                           ? () {
+                              HapticFeedback.mediumImpact();
                               final opponentID = userIDs.value.firstWhere(
                                 (userID) => userID != myUserID,
                                 orElse: () => '',

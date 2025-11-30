@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class ResultOverlay extends StatelessWidget {
   final ResultType type;
@@ -37,7 +38,10 @@ class ResultOverlay extends StatelessWidget {
           ),
           const SizedBox(height: 48),
           GestureDetector(
-            onTap: onPressedBackButton,
+            onTap: () {
+              HapticFeedback.mediumImpact();
+              onPressedBackButton();
+            },
             child: Image.asset(
               'assets/button_back.png',
               fit: BoxFit.fitWidth,
