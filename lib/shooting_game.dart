@@ -29,6 +29,10 @@ class ShootingGame extends FlameGame
   double _nextReliefSupplySpawnTime = 0.0;
   final math.Random _random = math.Random();
 
+  // BPM不安定時のタレット揺れ用
+  double _shakePhase = 0.0; // 揺れの位相（sin波用）
+  double _basePlayerY = 0.0; // プレイヤーの基準Y座標
+
   final BpmState bpmState;
   final void Function({
     required int level,
@@ -86,17 +90,28 @@ class ShootingGame extends FlameGame
       playerTurret.x = size.x - playerTurret.specs.size.x;
     }
 
-    // BPMデータを参照（例: 発射間隔の調整などに使用可能）
-    // これらの値はゲームロジックで使用可能です
-    // ignore: unused_local_variable
-    final currentBpm = bpmState.bpm;
-    // ignore: unused_local_variable
+    // BPMデータを参照
     final isStable = bpmState.isStable;
-    // ignore: unused_local_variable
     final stdDev = bpmState.stdDev;
-    // ここでBPMデータをゲームロジックに反映できます
-    // 例: 発射間隔の調整、難易度の変更など
-    // 使用例: playerTurret.specs.shotInterval = 0.5 + (currentBpm / 200.0);
+
+    // BPM不安定時のタレット揺れ処理（上下左右）
+    if (!isStable && stdDev > 0) {
+      // 標準偏差に比例して振幅と速度を計算
+      final amplitude = (stdDev / 15.0).clamp(0.0, 1.0) * 30.0;
+      final speed = 5.0 + (stdDev / 10.0).clamp(0.0, 1.0) * 10.0;
+
+      _shakePhase += dt * speed;
+      // Y軸: sin波、X軸: cos波（位相をずらして自然な揺れに）
+      final shakeOffsetY = math.sin(_shakePhase) * amplitude;
+      final shakeOffsetX =
+          math.cos(_shakePhase * 1.3) * amplitude * 0.5; // X軸は小さめ
+      playerTurret.x += shakeOffsetX * dt * speed;
+      playerTurret.y = _basePlayerY + shakeOffsetY;
+    } else {
+      // 安定時は基準位置に戻す
+      _shakePhase = 0.0;
+      playerTurret.y = _basePlayerY;
+    }
 
     // BPM 状態に応じたカウント
     if (turretLevel < 3) {
@@ -118,7 +133,8 @@ class ShootingGame extends FlameGame
     }
 
     // 自分のタレットの状態を相手に送信
-    final mirroredCenterPercentPosition = playerTurret.getMirroredCenterPercentPosition();
+    final mirroredCenterPercentPosition = playerTurret
+        .getMirroredCenterPercentPosition();
     onTurretStateChange(
       level: turretLevel,
       hp: playerTurret.hp,
@@ -156,10 +172,12 @@ class ShootingGame extends FlameGame
 
   void _initTurrets() {
     playerTurret.specs = TurretSpecs.getByLevel(1);
+    final playerY = size.y - playerTurret.specs.size.y - 20 - 88;
     playerTurret.position = Vector2(
       size.x / 2 - playerTurret.specs.size.x / 2,
-      size.y - playerTurret.specs.size.y - 20 - 88,
+      playerY,
     );
+    _basePlayerY = playerY; // 基準Y座標を保存
     playerTurret.resetHp();
 
     enemyTurret.position = Vector2(
