@@ -49,13 +49,13 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
       callback: (payload) {
         final level = payload['level'] as int?;
         final hp = payload['hp'] as int?;
-        final percentX = payload['percentX'] as double?;
-        final percentY = payload['percentY'] as double?;
+        final centerPercentX = payload['centerPercentX'] as double?;
+        final centerPercentY = payload['centerPercentY'] as double?;
 
         if (level == null ||
             hp == null ||
-            percentX == null ||
-            percentY == null) {
+            centerPercentX == null ||
+            centerPercentY == null) {
           return;
         }
 
@@ -63,8 +63,8 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
         game.updateOpponentTurret(
           level: level,
           hp: hp,
-          percentX: percentX,
-          percentY: percentY,
+          centerPercentX: centerPercentX,
+          centerPercentY: centerPercentY,
         );
 
         // ゲーム終了判定
@@ -120,16 +120,16 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
   void _sendTurretState({
     required int level,
     required int hp,
-    required double percentX,
-    required double percentY,
+    required double centerPercentX,
+    required double centerPercentY,
   }) {
     channel.sendBroadcastMessage(
       event: 'turret_state',
       payload: {
         'level': level,
         'hp': hp,
-        'percentX': percentX,
-        'percentY': percentY,
+        'centerPercentX': centerPercentX,
+        'centerPercentY': centerPercentY,
       },
     );
   }

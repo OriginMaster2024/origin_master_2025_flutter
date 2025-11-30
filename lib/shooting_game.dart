@@ -33,8 +33,8 @@ class ShootingGame extends FlameGame
   final void Function({
     required int level,
     required int hp,
-    required double percentX,
-    required double percentY,
+    required double centerPercentX,
+    required double centerPercentY,
   })
   onTurretStateChange;
   final void Function() onEnemyHit;
@@ -118,12 +118,12 @@ class ShootingGame extends FlameGame
     }
 
     // 自分のタレットの状態を相手に送信
-    final mirroredPercentPosition = playerTurret.getMirroredPercentPosition();
+    final mirroredCenterPercentPosition = playerTurret.getMirroredCenterPercentPosition();
     onTurretStateChange(
       level: turretLevel,
       hp: playerTurret.hp,
-      percentX: mirroredPercentPosition.x,
-      percentY: mirroredPercentPosition.y,
+      centerPercentX: mirroredCenterPercentPosition.x,
+      centerPercentY: mirroredCenterPercentPosition.y,
     );
 
     // ゲーム終了判定
@@ -172,20 +172,21 @@ class ShootingGame extends FlameGame
   void updateOpponentTurret({
     required int level,
     required int hp,
-    required double percentX,
-    required double percentY,
+    required double centerPercentX,
+    required double centerPercentY,
   }) {
     enemyTurret.specs = TurretSpecs.getByLevel(level);
     enemyTurret.size = enemyTurret.specs.size.clone();
     enemyTurret.hp = hp;
 
-    var positionX = size.x * percentX;
+    var positionX = size.x * centerPercentX - enemyTurret.specs.size.x / 2;
+    final positionY = size.y * centerPercentY - enemyTurret.specs.size.y / 2;
     // 画面端で制限
-    if (percentX < 0) positionX = 0;
+    if (centerPercentX < 0) positionX = 0;
     if (positionX + enemyTurret.specs.size.x > size.x) {
       positionX = size.x - enemyTurret.specs.size.x;
     }
-    enemyTurret.position = Vector2(positionX, size.y * percentY);
+    enemyTurret.position = Vector2(positionX, positionY);
   }
 
   void startGame() {
