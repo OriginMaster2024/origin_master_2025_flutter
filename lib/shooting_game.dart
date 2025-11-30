@@ -233,8 +233,12 @@ class ShootingGame extends FlameGame
   }
 
   Future<void> startGame() async {
-    await _bgmPlayer.seek(Duration.zero);
-    await _bgmPlayer.resume();
+    try {
+      await _bgmPlayer.seek(Duration.zero);
+      await _bgmPlayer.resume();
+    } on Exception catch (e) {
+      debugPrint("Something wrong with audio player!, error: $e",);
+    }
     resumeEngine();
   }
 

@@ -25,10 +25,14 @@ class _StartScreenState extends State<StartScreen> {
   }
 
   Future<void> _playBgm() async {
-    await _bgmPlayer.setReleaseMode(ReleaseMode.loop);
-    await _bgmPlayer.setSource(AssetSource('music/Home_Bgm.mp3'));
-    await _bgmPlayer.seek(Duration.zero);
-    await _bgmPlayer.resume();
+    try {
+      await _bgmPlayer.setReleaseMode(ReleaseMode.loop);
+      await _bgmPlayer.setSource(AssetSource('music/Home_Bgm.mp3'));
+      await _bgmPlayer.seek(Duration.zero);
+      await _bgmPlayer.resume();
+    } on Exception catch (e) {
+      debugPrint("Something wrong with audio player!, error: $e",);
+    }
   }
 
   @override

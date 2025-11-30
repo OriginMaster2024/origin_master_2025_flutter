@@ -1,4 +1,5 @@
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/cupertino.dart';
 
 class ButtonTapSoundService {
   // 1. シングルトンのインスタンス
@@ -28,10 +29,14 @@ class ButtonTapSoundService {
 
   // 5. 効果音再生メソッド
   void playTapSound() async {
-    // 効果音は短いため、常に最初から再生するためにseek(Duration.zero)を使用し、
-    // 最後に再生モード（ReleaseMode.stop）で再生を停止させます。
-    await _audioPlayer.setReleaseMode(ReleaseMode.stop);
-    await _audioPlayer.seek(Duration.zero);
-    await _audioPlayer.resume();
+    try {
+      // 効果音は短いため、常に最初から再生するためにseek(Duration.zero)を使用し、
+      // 最後に再生モード（ReleaseMode.stop）で再生を停止させます。
+      await _audioPlayer.setReleaseMode(ReleaseMode.stop);
+      await _audioPlayer.seek(Duration.zero);
+      await _audioPlayer.resume();
+    } on Exception catch (e) {
+      debugPrint("Something wrong with audio player!, error: $e",);
+    }
   }
 }
