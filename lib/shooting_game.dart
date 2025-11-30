@@ -22,7 +22,7 @@ class ShootingGame extends FlameGame
 
   double timeSinceLastShot = 0;
   double tiltX = 0;
-  final double sensitivity = 20;
+  final double sensitivity = 40;
 
   // 救援物資のスポーン管理
   double _reliefSupplyTimer = 0.0;
@@ -104,7 +104,7 @@ class ShootingGame extends FlameGame
         stableCounter += dt;
 
         // 3 秒以上安定していたらレベルアップ
-        if (stableCounter >= 3.0 && turretLevel < 3) {
+        if (stableCounter >= 5.0 && turretLevel < 3) {
           turretLevel += 1;
           playerTurret.specs = TurretSpecs.getByLevel(turretLevel);
           playerTurret.size = playerTurret.specs.size.clone();
@@ -132,7 +132,7 @@ class ShootingGame extends FlameGame
     }
 
     // UI に進捗 0〜1 を通知
-    stableProgress.value = (stableCounter / 3).clamp(0.0, 1.0);
+    stableProgress.value = (stableCounter / 5).clamp(0.0, 1.0);
 
     // 救援物資のスポーン処理
     if (!isGameOver) {
