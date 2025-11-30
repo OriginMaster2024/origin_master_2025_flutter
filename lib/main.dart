@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:origin_master_2025_flutter/button_tap_sound_service.dart';
 import 'package:origin_master_2025_flutter/start_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -20,6 +21,9 @@ Future<void> main() async {
     anonKey: supabaseAnonKey,
     realtimeClientOptions: const RealtimeClientOptions(eventsPerSecond: 40),
   );
+
+  // SoundServiceを初期化し、効果音をロード
+  await ButtonTapSoundService().initSounds();
 
   runApp(const MyApp());
 }

@@ -1,8 +1,10 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:origin_master_2025_flutter/game_screen.dart';
 import 'package:uuid/uuid.dart';
 
+import 'button_tap_sound_service.dart';
 import 'lobby_screen.dart';
 
 class StartScreen extends StatefulWidget {
@@ -87,6 +89,8 @@ class _StartScreenState extends State<StartScreen> {
                     GestureDetector(
                       onTap: () {
                         _bgmPlayer.stop();
+                        HapticFeedback.mediumImpact();
+                        ButtonTapSoundService().playTapSound();
 
                         // GameWidget に遷移
                         Navigator.push(
@@ -109,6 +113,9 @@ class _StartScreenState extends State<StartScreen> {
                     const SizedBox(width: 16),
                     GestureDetector(
                       onTap: () {
+                        HapticFeedback.mediumImpact();
+                        ButtonTapSoundService().playTapSound();
+
                         // ロビーに遷移
                         Navigator.push(
                           context,
