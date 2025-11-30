@@ -17,6 +17,8 @@ class Turret extends PositionComponent
   final bool isEnemy;
   double timeSinceLastShot = 0.0;
   ui.Image? image;
+  ui.Image? frozenImage;
+  bool isFrozen = true;
 
   static const int initialHp = 200;
   int hp = initialHp;
@@ -39,6 +41,11 @@ class Turret extends PositionComponent
     add(RectangleHitbox());
     final imagePath = isEnemy ? 'assets/airplane.png' : 'assets/ship.png';
     image = await loadUiImage(imagePath);
+    if (isEnemy) {
+      frozenImage = await loadUiImage('assets/airplane_frozen.png');
+    } else {
+      frozenImage = await loadUiImage('assets/ship_frozen.png');
+    }
   }
 
   // specs の setter を作って size も更新
@@ -61,7 +68,7 @@ class Turret extends PositionComponent
     super.update(dt);
     timeSinceLastShot += dt;
 
-    if (timeSinceLastShot >= specs.shotInterval) {
+    if (!isFrozen && timeSinceLastShot >= specs.shotInterval) {
       shoot();
       timeSinceLastShot = 0.0;
     }
@@ -124,15 +131,30 @@ class Turret extends PositionComponent
     super.render(canvas);
 
     // タレット本体
-    if (image != null) {
-      final paint = Paint();
-      if (_isFlashing) {
-        // フラッシュ中は白くブレンド
-        paint.colorFilter = const ColorFilter.mode(
-          Colors.white,
-          BlendMode.srcATop,
-        );
-      }
+
+    // フラッシュ中は白くブレンド
+    final paint = Paint();
+    if (_isFlashing) {
+      paint.colorFilter = const ColorFilter.mode(
+        Colors.white,
+        BlendMode.srcATop,
+      );
+    }
+
+    if (isFrozen && frozenImage != null) {
+      // 凍結中は凍結画像を描画
+      canvas.drawImageRect(
+        frozenImage!,
+        Rect.fromLTWH(
+          0,
+          0,
+          frozenImage!.width.toDouble(),
+          frozenImage!.height.toDouble(),
+        ),
+        Rect.fromLTWH(0, 0, size.x, size.x * 4 / 5),
+        paint,
+      );
+    } else if (image != null) {
       canvas.drawImageRect(
         image!,
         Rect.fromLTWH(0, 0, image!.width.toDouble(), image!.height.toDouble()),
