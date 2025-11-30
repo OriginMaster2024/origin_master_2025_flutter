@@ -39,6 +39,7 @@ class ShootingGame extends FlameGame
     required int hp,
     required double centerPercentX,
     required double centerPercentY,
+    required bool isFrozen,
   })
   onTurretStateChange;
   final void Function() onEnemyHit;
@@ -81,40 +82,47 @@ class ShootingGame extends FlameGame
   void update(double dt) {
     super.update(dt);
 
-    // プレイヤータレットの移動
-    playerTurret.x -= tiltX * sensitivity * dt;
-
-    // 画面端で制限
-    if (playerTurret.x < 0) playerTurret.x = 0;
-    if (playerTurret.x + playerTurret.specs.size.x > size.x) {
-      playerTurret.x = size.x - playerTurret.specs.size.x;
-    }
-
     // BPMデータを参照
+    final currentBpm = bpmState.bpm;
     final isStable = bpmState.isStable;
     final stdDev = bpmState.stdDev;
 
-    // BPM不安定時のタレット揺れ処理（上下左右）
-    if (!isStable && stdDev > 0) {
-      // 標準偏差に比例して振幅と速度を計算
-      final amplitude = (stdDev / 15.0).clamp(0.0, 1.0) * 30.0;
-      final speed = 5.0 + (stdDev / 10.0).clamp(0.0, 1.0) * 10.0;
+    // BPM 40以下で凍結
+    playerTurret.isFrozen = currentBpm <= 40;
 
-      _shakePhase += dt * speed;
-      // Y軸: sin波、X軸: cos波（位相をずらして自然な揺れに）
-      final shakeOffsetY = math.sin(_shakePhase) * amplitude;
-      final shakeOffsetX =
-          math.cos(_shakePhase * 1.3) * amplitude * 0.5; // X軸は小さめ
-      playerTurret.x += shakeOffsetX * dt * speed;
-      playerTurret.y = _basePlayerY + shakeOffsetY;
-    } else {
-      // 安定時は基準位置に戻す
-      _shakePhase = 0.0;
-      playerTurret.y = _basePlayerY;
+    // 凍結中は移動しない
+    if (!playerTurret.isFrozen) {
+      // プレイヤータレットの移動
+      playerTurret.x -= tiltX * sensitivity * dt;
+
+      // 画面端で制限
+      if (playerTurret.x < 0) playerTurret.x = 0;
+      if (playerTurret.x + playerTurret.specs.size.x > size.x) {
+        playerTurret.x = size.x - playerTurret.specs.size.x;
+      }
+
+      // BPM不安定時のタレット揺れ処理（上下左右）
+      if (!isStable && stdDev > 0) {
+        // 標準偏差に比例して振幅と速度を計算
+        final amplitude = (stdDev / 15.0).clamp(0.0, 1.0) * 30.0;
+        final speed = 5.0 + (stdDev / 10.0).clamp(0.0, 1.0) * 10.0;
+
+        _shakePhase += dt * speed;
+        // Y軸: sin波、X軸: cos波（位相をずらして自然な揺れに）
+        final shakeOffsetY = math.sin(_shakePhase) * amplitude;
+        final shakeOffsetX =
+            math.cos(_shakePhase * 1.3) * amplitude * 0.5; // X軸は小さめ
+        playerTurret.x += shakeOffsetX * dt * speed;
+        playerTurret.y = _basePlayerY + shakeOffsetY;
+      } else {
+        // 安定時は基準位置に戻す
+        _shakePhase = 0.0;
+        playerTurret.y = _basePlayerY;
+      }
     }
 
     // BPM 状態に応じたカウント
-    if (turretLevel < 3) {
+    if (turretLevel < 3 && !playerTurret.isFrozen) {
       if (isStable) {
         stableCounter += dt;
 
@@ -140,6 +148,7 @@ class ShootingGame extends FlameGame
       hp: playerTurret.hp,
       centerPercentX: mirroredCenterPercentPosition.x,
       centerPercentY: mirroredCenterPercentPosition.y,
+      isFrozen: playerTurret.isFrozen,
     );
 
     // ゲーム終了判定
@@ -192,10 +201,12 @@ class ShootingGame extends FlameGame
     required int hp,
     required double centerPercentX,
     required double centerPercentY,
+    required bool isFrozen,
   }) {
     enemyTurret.specs = TurretSpecs.getByLevel(level);
     enemyTurret.size = enemyTurret.specs.size.clone();
     enemyTurret.hp = hp;
+    enemyTurret.isFrozen = isFrozen;
 
     var positionX = size.x * centerPercentX - enemyTurret.specs.size.x / 2;
     final positionY = size.y * centerPercentY - enemyTurret.specs.size.y / 2;

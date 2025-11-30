@@ -51,11 +51,13 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
         final hp = payload['hp'] as int?;
         final centerPercentX = payload['centerPercentX'] as double?;
         final centerPercentY = payload['centerPercentY'] as double?;
+        final isFrozen = payload['isFrozen'] as bool?;
 
         if (level == null ||
             hp == null ||
             centerPercentX == null ||
-            centerPercentY == null) {
+            centerPercentY == null ||
+            isFrozen == null) {
           return;
         }
 
@@ -65,6 +67,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
           hp: hp,
           centerPercentX: centerPercentX,
           centerPercentY: centerPercentY,
+          isFrozen: isFrozen,
         );
 
         // ゲーム終了判定
@@ -122,6 +125,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
     required int hp,
     required double centerPercentX,
     required double centerPercentY,
+    required bool isFrozen,
   }) {
     channel.sendBroadcastMessage(
       event: 'turret_state',
@@ -130,6 +134,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
         'hp': hp,
         'centerPercentX': centerPercentX,
         'centerPercentY': centerPercentY,
+        'isFrozen': isFrozen,
       },
     );
   }
